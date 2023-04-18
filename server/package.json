@@ -1,0 +1,23 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend of allFriends web app",
+  "main": "app.js",
+  "scripts": {
+    "dev": "./node_modules/nodemon/bin/nodemon.js app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "connect-pg-simple": "^8.0.0",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "pg": "^8.10.0",
+    "sequelize": "^6.31.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

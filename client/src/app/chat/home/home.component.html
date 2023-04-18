@@ -1,0 +1,7 @@
+<div>
+    <h1 style="color: white;">Welcome, {{sessionUser.username}}</h1>
+    <p style="font-size: 1.1em; color: white;">Email: {{sessionUser.email}}</p>
+    <p style="font-size: 1.1em; color: white;">Description: {{sessionUser.description}}</p>
+
+    <button mat-raised-button color="accent" (click)="signout()">Sign Out</button>
+</div>
