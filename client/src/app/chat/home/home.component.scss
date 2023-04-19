@@ -1,0 +1,49 @@
+.menu-card{
+    width: 100%;
+    margin-left: 30px;
+    display: block;
+    padding-right: 30px;
+}
+
+.menu-card-header{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.menu-card-header-button{
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.menu-card-header-buttons{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+}
+
+
+.text-color{
+    color: white;
+}
+
+mat-divider{
+    margin-bottom: 20px;
+}
+
+mat-grid-list{
+    height: 100%;
+    box-sizing: border-box;
+}
+
+mat-grid-tile{
+    height: 100%;
+    box-sizing: border-box;
+}
+
+mat-card{
+    height: 90%;
+    box-sizing: border-box;
+    background-color: rgb(66, 66, 66, 0.4);
+}

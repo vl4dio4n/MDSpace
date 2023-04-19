@@ -3,6 +3,7 @@ import { IUser } from 'src/app/shared/interfaces/user-interface';
 import { IResponse } from 'src/app/shared/interfaces/response-interfacce';
 import { AuthenticationService } from 'src/app/shared/services/authentication.service';
 import { Router } from '@angular/router';
+import { ChatService } from 'src/app/shared/services/chat.service';
 
 @Component({
   selector: 'app-home',
@@ -14,8 +15,10 @@ export class HomeComponent {
 
   constructor(
     private router: Router,
-    private authenticationService: AuthenticationService){
+    private authenticationService: AuthenticationService,
+    private chatService: ChatService){
     this.sessionUser = this.authenticationService.sessionUser!;
+    this.chatService.getMessage();
   }
 
   signout(): void{

@@ -20,6 +20,4 @@ Session.init({
     timestamps: false
 });
 
-Session.sync();
-
 module.exports = { Session }

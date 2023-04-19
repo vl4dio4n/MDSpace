@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
+import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -9,6 +10,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { ChatModule } from './chat/chat.module';
 import { MaterialModule } from './shared/material/material.module';
+
+
+const config: SocketIoConfig = { url: 'http://localhost:5000', options: {}};
 
 
 @NgModule({
@@ -22,7 +26,8 @@ import { MaterialModule } from './shared/material/material.module';
     HttpClientModule,
     AuthenticationModule,
     ChatModule,
-    MaterialModule
+    MaterialModule,
+    SocketIoModule.forRoot(config)
   ],
   providers: [],
   bootstrap: [AppComponent]

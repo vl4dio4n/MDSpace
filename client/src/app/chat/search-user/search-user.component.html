@@ -1,0 +1,15 @@
+<mat-form-field class="search-field">
+    <span matPrefix> </span>
+    <input type="tel" matInput placeholder="Search user" name="search" [formControl]="searchControl">
+    <button matSuffix mat-button><mat-icon >search</mat-icon></button>
+</mat-form-field>
+
+<div *ngIf="message.length > 0" class="message"><em>{{message}}</em></div>
+
+<mat-list *ngIf="searchResults.length > 0">
+    <mat-list-item *ngFor="let result of searchResults">
+        <img matListItemAvatar src="assets/images/user.png">
+        <div matListItemTitle>{{ result.username }}</div>
+        <div matListItemLine>{{ result.isOnline ? "online" : "offline" }}</div>
+    </mat-list-item>
+</mat-list>

@@ -33,6 +33,4 @@ User.init({
     timestamps: false
 })
 
-User.sync();
-
 module.exports = { User }

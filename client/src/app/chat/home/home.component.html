@@ -1,7 +1,33 @@
-<div>
-    <h1 style="color: white;">Welcome, {{sessionUser.username}}</h1>
-    <p style="font-size: 1.1em; color: white;">Email: {{sessionUser.email}}</p>
-    <p style="font-size: 1.1em; color: white;">Description: {{sessionUser.description}}</p>
+<mat-grid-list cols="7">
+    <mat-grid-tile colspan="2">
+        <mat-card class="menu-card">
+            <mat-card-header class="menu-card-header">
+                <img mat-card-avatar src="assets/images/user.png">
+                <mat-card-title class="text-color">{{sessionUser.username}}</mat-card-title>
+                <mat-card-subtitle>online</mat-card-subtitle>
+                <div class="menu-card-header-buttons">
+                    <button mat-raised-button color="primary" title="Profile Info" class="menu-card-header-button"><mat-icon>account_box</mat-icon></button>
+                    <button mat-raised-button color="primary" title="Add Contact" class="menu-card-header-button"><mat-icon>add_box</mat-icon></button>
+                    <button mat-raised-button color="primary" title="Create Group" class="menu-card-header-button"><mat-icon>group_add</mat-icon></button>
+                </div>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-divider></mat-divider>
+                <app-search-user></app-search-user>
+                <mat-divider></mat-divider>
+                <app-contacts-list></app-contacts-list>
+            </mat-card-content>
+        </mat-card>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="5">
+        <div>
+            <h1 style="color: white;">Welcome, {{sessionUser.username}}</h1>
+            <p style="font-size: 1.1em; color: white;">Email: {{sessionUser.email}}</p>
+            <p style="font-size: 1.1em; color: white;">Description: {{sessionUser.description}}</p>
+        
+            <button mat-raised-button color="accent" (click)="signout()">Sign Out</button>
+        </div>
+    </mat-grid-tile>
+</mat-grid-list>
 
-    <button mat-raised-button color="accent" (click)="signout()">Sign Out</button>
-</div>
+
