@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { IResponse } from 'src/app/shared/interfaces/response-interfacce';
@@ -14,10 +14,12 @@ export class SearchUserComponent {
   searchControl = new FormControl('');
   searchResults: ISearchUser[] = [];
   message = "";
-  
+  @Output() hasInput = new EventEmitter<boolean>();
+
   constructor(private searchService: SearchService){
     this.searchControl.valueChanges.pipe(debounceTime(500)).subscribe(value => {
       if(value != null && value != ""){
+        this.hasInput.emit(true);
         this.searchService.searchUser(value).subscribe((response: IResponse<ISearchUser[]>) => {
           if(response.content){
             this.searchResults = response.content;
@@ -29,6 +31,7 @@ export class SearchUserComponent {
           }
         });
       } else {
+        this.hasInput.emit(false);
         this.searchResults = [];
         this.message = "";
       }

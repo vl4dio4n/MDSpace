@@ -1,7 +1,8 @@
 import { IThread } from "./thread-interface";
 
 export interface IGroup{
-    group_id: number;
-    group_name: string;
+    groupId: number;
+    groupName: string;
     threads: IThread[];
+    unseenMessages: number;
 }

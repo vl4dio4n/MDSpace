@@ -4,4 +4,5 @@ export interface IMessage {
     senderUsername: string;
     content: string;
     timestamp: Date;
+    type: "text";
 }

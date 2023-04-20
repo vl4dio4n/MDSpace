@@ -1,0 +1,32 @@
+<h3 class="accordion-title">Chats</h3>
+<div class="accordion-container">
+    <mat-accordion>
+        <mat-expansion-panel *ngFor="let group of contacts" hideToggle>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-card>
+                        <mat-card-header class="group-header">
+                            <img mat-card-avatar src="assets/images/user.png" class="group-avatar">
+                            <mat-card-title class="group-name" style="width: 100%;">{{group.groupName}}</mat-card-title>
+                            <div class="group-header-badge">
+                                <span class="badge-container badge-container-header" *ngIf="group.unseenMessages > 0"><span class="badge">{{ group.unseenMessages }}</span></span>
+                            </div>
+                        </mat-card-header>
+                    </mat-card>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-list calss="thread-list">
+                <mat-list-item class="thread-list-item" *ngFor="let thread of group.threads" (click)="selectThread(thread.threadId)">
+                    <div matListItemTitle class="thread-list-item-title">
+                        <span>#{{ thread.threadName }}</span>
+                        <span class="badge-container" *ngIf="thread.unseenMessages > 0"><span class="badge">{{ thread.unseenMessages }}</span></span>
+                    </div>
+                    <div matListItemLine *ngIf="thread.lastMessage" class="thread-list-item-line">
+                        <p class="last-message">{{thread.lastMessage.senderUsername}}: {{thread.lastMessage.content}}</p>
+                        <small class="timestamp">{{thread.lastMessage.timestamp | timestamp}}</small> 
+                    </div>
+                </mat-list-item>
+            </mat-list>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

@@ -8,7 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatGridListModule } from '@angular/material/grid-list'
 import { MatDividerModule } from '@angular/material/divider';
 import { MatBadgeModule } from '@angular/material/badge';
-import {MatListModule} from '@angular/material/list';
+import { MatListModule } from '@angular/material/list';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [],
@@ -24,7 +25,8 @@ import {MatListModule} from '@angular/material/list';
     MatGridListModule,
     MatDividerModule,
     MatBadgeModule,
-    MatListModule
+    MatListModule,
+    MatExpansionModule
   ]
 })
 export class MaterialModule { }

@@ -3,8 +3,12 @@
 }
 
 mat-list{
-    max-height: 400px;
+    max-height: 570px;
     overflow-y: scroll;
+}
+
+mat-list-item{
+    border-bottom: 1px solid rgba(150, 150, 150, 0.4);
 }
 
 mat-list-item:hover {

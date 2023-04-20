@@ -5,28 +5,38 @@
                 <img mat-card-avatar src="assets/images/user.png">
                 <mat-card-title class="text-color">{{sessionUser.username}}</mat-card-title>
                 <mat-card-subtitle>online</mat-card-subtitle>
-                <div class="menu-card-header-buttons">
-                    <button mat-raised-button color="primary" title="Profile Info" class="menu-card-header-button"><mat-icon>account_box</mat-icon></button>
-                    <button mat-raised-button color="primary" title="Add Contact" class="menu-card-header-button"><mat-icon>add_box</mat-icon></button>
-                    <button mat-raised-button color="primary" title="Create Group" class="menu-card-header-button"><mat-icon>group_add</mat-icon></button>
+                <div class="card-header-buttons">
+                    <button mat-raised-button color="primary" title="Profile Info" class="card-header-button"><mat-icon>account_box</mat-icon></button>
+                    <button mat-raised-button color="primary" title="Create Group" class="card-header-button"><mat-icon>group_add</mat-icon></button>
+                    <button mat-raised-button color="primary" title="Log out" class="card-header-button" (click)="signout()"><mat-icon>logout</mat-icon></button>
                 </div>
             </mat-card-header>
             <mat-card-content>
                 <mat-divider></mat-divider>
-                <app-search-user></app-search-user>
+                <app-search-user (hasInput)="hasInput($event)"></app-search-user>
                 <mat-divider></mat-divider>
-                <app-contacts-list></app-contacts-list>
+                <app-contacts-list (selectedThread)="selectThread($event)" *ngIf="!searchBarHasInput"></app-contacts-list>
             </mat-card-content>
         </mat-card>
     </mat-grid-tile>
     <mat-grid-tile colspan="5">
-        <div>
-            <h1 style="color: white;">Welcome, {{sessionUser.username}}</h1>
-            <p style="font-size: 1.1em; color: white;">Email: {{sessionUser.email}}</p>
-            <p style="font-size: 1.1em; color: white;">Description: {{sessionUser.description}}</p>
-        
-            <button mat-raised-button color="accent" (click)="signout()">Sign Out</button>
-        </div>
+        <mat-card class="chat-box-card">
+            <mat-card-header class="chat-box-card-header">
+                <img mat-card-avatar src="assets/images/user.png">
+                <mat-card-title class="text-color">Nimic</mat-card-title>
+                <mat-card-subtitle>online</mat-card-subtitle>
+                <div class="card-header-buttons">
+                    <button mat-raised-button color="primary" title="Details" class="card-header-button"><mat-icon>account_box</mat-icon></button>
+                    <button mat-raised-button *ngIf="true" color="primary" title="Add Member" class="card-header-button"><mat-icon>person_add</mat-icon></button>
+                    <button mat-raised-button color="primary" title="Video Call" class="card-header-button"><mat-icon>videocam</mat-icon></button>
+                </div>
+            </mat-card-header>
+            <mat-card-content class="chat-box-card-content">
+                <mat-divider></mat-divider>
+                <app-chat-box [threadId]="selectedThread"></app-chat-box>
+            </mat-card-content>
+        </mat-card>        
+  
     </mat-grid-tile>
 </mat-grid-list>
 

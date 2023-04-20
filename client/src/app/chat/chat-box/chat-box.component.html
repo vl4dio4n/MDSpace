@@ -1,0 +1,8 @@
+<div class="chat-box-container">
+    <div *ngIf="!threadId" class="default-text">Select a conversation and start chatting...</div>
+    <mat-form-field *ngIf="threadId" class="message-field">
+        <input matInput placeholder="Message">
+        <button matSuffix mat-button><mat-icon>send</mat-icon></button>
+    </mat-form-field>
+</div>
+

@@ -12,6 +12,8 @@ import { ChatService } from 'src/app/shared/services/chat.service';
 })
 export class HomeComponent {
   sessionUser: IUser;
+  searchBarHasInput = false;
+  selectedThread: number | undefined; 
 
   constructor(
     private router: Router,
@@ -26,5 +28,13 @@ export class HomeComponent {
       this.authenticationService.sessionUser = undefined;  
       this.router.navigate(['/signin']);
     });
+  }
+
+  hasInput(data: boolean): void{
+    this.searchBarHasInput = data;
+  }
+
+  selectThread(selectedThread: number){
+    this.selectedThread = selectedThread;
   }
 }
