@@ -1,11 +1,13 @@
 const express = require('express');
-const crypto = require('crypto');
+const crypto = require('crypto'); 
 
 const { User } = require('../models/User');
 const { CustomError } = require('../utils/Error');
+const { globals } = require('../global-variables');
+
 
 class AuthenticationController{
-    static serverPassword = 'WhiteSharks';
+    static serverPassword = globals.serverPassword;
 
     static async register(req, res, next){
         const username = req.body.username.trim();
@@ -38,8 +40,7 @@ class AuthenticationController{
             const sessionUser = {
                 username: username,
                 email: email,
-                description: description,
-                isOnline: true
+                description: description
             }
             req.session.user = sessionUser;
 
@@ -66,8 +67,7 @@ class AuthenticationController{
             const sessionUser = {
                 username: user.username,
                 email: user.email,
-                description: user.description,
-                isOnline: true
+                description: user.description
             }
             req.session.user = sessionUser;
 

@@ -8,6 +8,7 @@ import { ContactsListComponent } from './contacts-list/contacts-list.component';
 import { SharedModule } from '../shared/shared.module';
 import { ChatBoxComponent } from './chat-box/chat-box.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
+import { GroupProfileComponent } from './group-profile/group-profile.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
     SearchUserComponent,
     ContactsListComponent,
     ChatBoxComponent,
-    UserProfileComponent
+    UserProfileComponent,
+    GroupProfileComponent
   ],
   imports: [
     CommonModule,

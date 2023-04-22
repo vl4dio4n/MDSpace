@@ -4,7 +4,8 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { IResponse } from '../interfaces/response-interfacce';
 import { IGroup } from '../interfaces/group-interface';
-import { IUser } from '../interfaces/user-interface';
+import { IUserProfile } from '../interfaces/user-profile-interface';
+import { IEditUserProfile } from '../interfaces/edit-user-profile-interface';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +22,11 @@ export class SearchService {
     return this.http.get<IResponse<IGroup[]>>('/api/get-contacts');
   }
 
-  getUserProfile(data: string): Observable<IResponse<IUser>>{
-    return this.http.get<IResponse<IUser>>('/api/get-user-profile', { params: { data: data } });
+  getUserProfile(data: string): Observable<IResponse<IUserProfile>>{
+    return this.http.get<IResponse<IUserProfile>>('/api/get-user-profile', { params: { data: data } });
+  }
+
+  editUserProfile(data: IEditUserProfile): Observable<IResponse<IUserProfile>>{
+    return this.http.post<IResponse<IUserProfile>>('/api/edit-user-profile', data, { withCredentials: true });
   }
 }

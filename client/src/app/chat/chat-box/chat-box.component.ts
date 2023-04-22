@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { IMessage } from 'src/app/shared/interfaces/message-interface';
 import { IResponse } from 'src/app/shared/interfaces/response-interfacce';
@@ -13,6 +13,7 @@ import { ChatService } from 'src/app/shared/services/chat.service';
 })
 export class ChatBoxComponent implements OnChanges{
   @Input() threadId: number | undefined;
+  @Output() selectedUsername = new EventEmitter<string>();   
   messages: IMessage[] = [];
   sessionUser: IUser;
 
@@ -35,5 +36,9 @@ export class ChatBoxComponent implements OnChanges{
     return timestamp1.getFullYear() != timestamp2.getFullYear() ||
       timestamp1.getMonth() != timestamp2.getMonth() ||
       timestamp1.getDate() != timestamp2.getDate();
+  }
+
+  onUsernameClicked(username: string){
+    this.selectedUsername.emit(username);
   }
 }

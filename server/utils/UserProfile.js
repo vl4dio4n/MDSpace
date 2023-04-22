@@ -2,13 +2,14 @@ class UserProfile {
     username;
     email;
     description;
+    lastActivity;
     isOnline;
 
-
-    constructor(username, email, description, isOnline){
+    constructor(username, email, description, lastActivity, isOnline){
         this.username = username;
         this.email = email;
         this.description = description;
+        this.lastActivity = lastActivity;
         this.isOnline = isOnline;
     }
 
@@ -34,6 +35,14 @@ class UserProfile {
 
     set description(newDescription){
         this._description = newDescription;
+    }
+
+    get lastActivity(){
+        return this._lastActivity;
+    }
+
+    set email(newLastActivity){
+        this._lastActivity = newLastActivity;
     }
 
     get isOnline(){

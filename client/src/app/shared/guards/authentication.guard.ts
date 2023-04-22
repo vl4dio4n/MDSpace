@@ -3,8 +3,6 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTr
 import { Observable, BehaviorSubject } from 'rxjs';
 
 import { AuthenticationService } from '../services/authentication.service';
-import { IResponse } from '../interfaces/response-interfacce';
-import { IUser } from '../interfaces/user-interface';
 
 @Injectable({
   providedIn: 'root'

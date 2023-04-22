@@ -3,6 +3,8 @@ import { OnInit } from '@angular/core';
 import { IResponse } from 'src/app/shared/interfaces/response-interfacce';
 import { SearchService } from 'src/app/shared/services/search.service';
 import { IGroup } from 'src/app/shared/interfaces/group-interface';
+import { IShortThreadInfo } from 'src/app/shared/interfaces/short-thread-info-interface';
+import { IShortGroupInfo } from 'src/app/shared/interfaces/short-group-info-interface';
 
 @Component({
   selector: 'app-contacts-list',
@@ -10,7 +12,9 @@ import { IGroup } from 'src/app/shared/interfaces/group-interface';
   styleUrls: ['./contacts-list.component.scss']
 })
 export class ContactsListComponent implements OnInit{
-  @Output() selectedThread = new EventEmitter<number>();
+  @Output() selectedThread = new EventEmitter<IShortThreadInfo>();
+  @Output() selectedGroup = new EventEmitter<IShortGroupInfo>();
+  lastGroupId?: number; 
   contacts: IGroup[] = [];  
 
   constructor(private searchService: SearchService){}
@@ -24,7 +28,12 @@ export class ContactsListComponent implements OnInit{
     });
   }
 
-  selectThread(selectedThread: number){
-    this.selectedThread.emit(selectedThread);
+  selectThread(threadId: number, threadName: string, groupId: number, groupName: string){
+    this.selectedThread.emit({threadId, threadName});
+    if(groupId != this.lastGroupId){
+      this.lastGroupId = groupId;
+      this.selectedGroup.emit({groupId, groupName});
+    }
   }
+
 }

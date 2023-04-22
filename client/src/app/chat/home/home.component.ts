@@ -6,6 +6,10 @@ import { Router } from '@angular/router';
 import { ChatService } from 'src/app/shared/services/chat.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SidenavEnum } from 'src/app/shared/enums/sidenav-enum';
+import { IGroupInfo } from 'src/app/shared/interfaces/group-info-interface';
+import { IShortGroupInfo } from 'src/app/shared/interfaces/short-group-info-interface';
+import { IShortThreadInfo } from 'src/app/shared/interfaces/short-thread-info-interface';
+import { GroupTypeEnum } from 'src/app/shared/enums/group-type-enum';
 
 @Component({
   selector: 'app-home',
@@ -15,17 +19,21 @@ import { SidenavEnum } from 'src/app/shared/enums/sidenav-enum';
 export class HomeComponent {
   sessionUser: IUser;
   searchBarHasInput = false;
-  selectedThread: number | undefined;
+  selectedThread: IShortThreadInfo | undefined;
+  selectedGroup: IShortGroupInfo | undefined;
+  groupInfo?: IGroupInfo;
 
   @ViewChild(MatSidenav)
   sidenav!: MatSidenav;
   sidenavType: SidenavEnum | undefined;
   data: string | undefined;
-  sidenavEnum = SidenavEnum;
-
+  
   contactsListSpan = 2;
   chatBoxSpan = 5;
   totalCols = 7;
+
+  sidenavEnum = SidenavEnum;
+  groupTypeEnum = GroupTypeEnum;
 
   constructor(
     private router: Router,
@@ -46,8 +54,17 @@ export class HomeComponent {
     this.searchBarHasInput = data;
   }
 
-  selectThread(selectedThread: number){
+  selectThread(selectedThread: IShortThreadInfo){
     this.selectedThread = selectedThread;
+  }
+
+  selectGroup(selectedGroup: IShortGroupInfo){
+    this.selectedGroup = selectedGroup;
+    this.chatService.getGroupInfo(selectedGroup.groupId).subscribe((response: IResponse<IGroupInfo>) => {
+      if(response.content){
+        this.groupInfo = response.content;
+      }
+    });
   }
 
   async closeSidenav(): Promise<void>{
@@ -61,6 +78,36 @@ export class HomeComponent {
     this.data = data?.toString();
     await this.sidenav.toggle();
     this.contactsListSpan = this.sidenav.opened ? 3 : 2;
-    this.totalCols = this.sidenav.opened ? 8 : 7
+    this.totalCols = this.sidenav.opened ? 8 : 7;
   }
+
+  edit(): void{
+    if(this.sidenavType == SidenavEnum.UserProfile)
+      this.sidenavType = SidenavEnum.EditUserProfile;
+  }
+
+  back(): void{
+    if(this.sidenavType == SidenavEnum.EditUserProfile)
+      this.sidenavType = SidenavEnum.UserProfile;
+  }
+
+  async showUserProfile(username: string): Promise<void> {
+    if(this.sidenav.opened)
+      await this.closeSidenav();
+    this.toggleSidenav(SidenavEnum.UserProfile, username); 
+  }
+
+  async showGroupProfile(groupId: number): Promise<void> {
+    if(this.sidenav.opened)
+      await this.closeSidenav();
+    this.toggleSidenav(SidenavEnum.GroupProfile, groupId); 
+  }
+
+  onGroupInfoRequested(): void {
+    if(this.groupInfo!.type == GroupTypeEnum.User)
+      this.showUserProfile(this.selectedGroup!.groupName);
+    else
+      this.showGroupProfile(this.selectedGroup!.groupId);
+  }
+  
 }

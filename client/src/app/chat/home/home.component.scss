@@ -70,6 +70,10 @@ mat-card-content{
 
 }
 
+.chat-box-title{
+    width: 300px;
+}
+
 .text-color{
     color: white;
 }
@@ -89,7 +93,21 @@ app-chat-box{
     background: linear-gradient(to bottom right, #000000, #94b1c0);
 }
 
-.sidenav-close-container,
+.sidenav-buttons-container{
+    width: 400px;
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+}
+
+.action-buttons-container{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+    box-sizing: border-box;
+}
+
 .sidenav-content-container{
     width: 400px;
     box-sizing: border-box;
@@ -100,6 +118,16 @@ app-chat-box{
     box-sizing: border-box;
 }
 
-.sidenav-close-button{
+.sidenav-action-button{
     background-color: transparent;
+}
+
+.thread-name-chat-box-header{
+    color: rgb(200, 200, 200);
+    font-size: 0.9em;
+}
+
+.group-name-chat-box-header:hover{
+    cursor: pointer;
+    color: rgb(100, 100, 100);
 }

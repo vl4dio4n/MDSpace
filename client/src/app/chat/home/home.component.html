@@ -1,10 +1,15 @@
 <mat-sidenav-container class="sidenav-container" style="height: 100%;">
     <mat-sidenav mode="side" position="end" class="sidenav">
-        <div class="sidenav-close-container">
-            <button mat-flat-button class="sidenav-close-button" title="Close" (click)="closeSidenav()"><mat-icon>close</mat-icon></button>
+        <div class="sidenav-buttons-container">
+            <button mat-flat-button class="sidenav-action-button" title="Close" (click)="closeSidenav()"><mat-icon>close</mat-icon></button>
+            <div class="action-buttons-container">
+                <button *ngIf="this.sidenavType == sidenavEnum.UserProfile && this.sessionUser.username == data" mat-flat-button class="sidenav-action-button" title="Edit" (click)="edit()"><mat-icon>edit</mat-icon></button>    
+                <button *ngIf="this.sidenavType == sidenavEnum.EditUserProfile" mat-flat-button class="sidenav-action-button" title="Edit" (click)="back()"><mat-icon>arrow_back</mat-icon></button> 
+            </div>  
         </div>
         <div class="sidenav-content-container">
-            <app-user-profile *ngIf="this.sidenavType == sidenavEnum.UserProfile" [username]="data!"></app-user-profile>
+            <app-user-profile *ngIf="this.sidenavType == sidenavEnum.UserProfile || this.sidenavType == sidenavEnum.EditUserProfile" [username]="data!" [sidenavType]="sidenavType" (profileUpdated)="sidenavType = sidenavEnum.UserProfile"></app-user-profile>
+            <app-group-profile *ngIf="this.sidenavType == sidenavEnum.GroupProfile || this.sidenavType == sidenavEnum.EditGroupProfile" [groupId]="selectedGroup!.groupId" [sidenavType]="sidenavType" (profileUpdated)="sidenavType = sidenavEnum.GroupProfile" (selectedUsername)="showUserProfile($event)"></app-group-profile>
         </div>
     </mat-sidenav>
     <mat-sidenav-content>
@@ -16,7 +21,7 @@
                         <mat-card-title class="text-color">{{sessionUser.username}}</mat-card-title>
                         <mat-card-subtitle>online</mat-card-subtitle>
                         <div class="card-header-buttons">
-                            <button mat-raised-button color="primary" title="Profile Info" class="card-header-button" (click)="toggleSidenav(sidenavEnum.UserProfile, sessionUser.username)"><mat-icon>account_box</mat-icon></button>
+                            <button mat-raised-button color="primary" title="Profile Info" class="card-header-button" (click)="showUserProfile(sessionUser.username)"><mat-icon>account_box</mat-icon></button>
                             <button mat-raised-button color="primary" title="Create Group" class="card-header-button"><mat-icon>group_add</mat-icon></button>
                             <button mat-raised-button color="primary" title="Log out" class="card-header-button" (click)="signout()"><mat-icon>logout</mat-icon></button>
                         </div>
@@ -25,25 +30,28 @@
                         <mat-divider></mat-divider>
                         <app-search-user (hasInput)="hasInput($event)"></app-search-user>
                         <mat-divider></mat-divider>
-                        <app-contacts-list (selectedThread)="selectThread($event)" *ngIf="!searchBarHasInput"></app-contacts-list>
+                        <app-contacts-list (selectedThread)="selectThread($event)" (selectedGroup)="selectGroup($event)" *ngIf="!searchBarHasInput"></app-contacts-list>
                     </mat-card-content>
                 </mat-card>
             </mat-grid-tile>
             <mat-grid-tile [colspan]="chatBoxSpan">
                 <mat-card class="chat-box-card">
-                    <mat-card-header class="chat-box-card-header">
+                    <mat-card-header *ngIf="selectedThread" class="chat-box-card-header">
                         <img mat-card-avatar src="assets/images/user.png">
-                        <mat-card-title class="text-color">Nimic</mat-card-title>
-                        <mat-card-subtitle>online</mat-card-subtitle>
+                        <mat-card-title class="chat-box-title">
+                            <span class="group-name-chat-box-header" (click)="onGroupInfoRequested()">{{selectedGroup!.groupName}}</span>&nbsp;
+                            <span class="thread-name-chat-box-header">#{{selectedThread!.threadName}}</span>
+                        </mat-card-title>
+                        <mat-card-subtitle *ngIf="this.groupInfo?.type == groupTypeEnum.User">online</mat-card-subtitle>
                         <div class="card-header-buttons">
-                            <button mat-raised-button color="primary" title="Details" class="card-header-button"><mat-icon>account_box</mat-icon></button>
+                            <button mat-raised-button color="primary" title="Details" class="card-header-button" (click)="onGroupInfoRequested()"><mat-icon>account_box</mat-icon></button>
                             <button mat-raised-button *ngIf="true" color="primary" title="Add Member" class="card-header-button"><mat-icon>person_add</mat-icon></button>
                             <button mat-raised-button color="primary" title="Video Call" class="card-header-button"><mat-icon>videocam</mat-icon></button>
                         </div>
                     </mat-card-header>
                     <mat-card-content class="chat-box-card-content">
-                        <mat-divider></mat-divider>
-                        <app-chat-box [threadId]="selectedThread"></app-chat-box>
+                        <mat-divider *ngIf="selectedThread?.threadId"></mat-divider>
+                        <app-chat-box [threadId]="selectedThread?.threadId" (selectedUsername)="showUserProfile($event)"></app-chat-box>
                     </mat-card-content>
                 </mat-card>        
             </mat-grid-tile>

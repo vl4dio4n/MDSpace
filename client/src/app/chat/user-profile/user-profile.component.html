@@ -2,8 +2,49 @@
     <div class="avatar-container">
         <img src="assets/images/user.png" class="avatar">
     </div>
-    <div class="username-container username">@{{user?.username}}</div>
-    <div class="status-container status">{{user?.isOnline ? "online" : "offline"}}</div>
+    <div class="username-container username">@{{user.username}}</div>
+    <div class="status-container status">{{user.isOnline ? "online" : "offline"}}</div>
+    <div class="last-activity-container last-activity">Last active:&nbsp;{{user.isOnline ? "now" : (user!.lastActivity | timestamp : 'chat-box')}}</div>
     <mat-divider></mat-divider>
-    <div class="description-container"><strong>About:&nbsp;</strong>{{user?.description}}</div>
+    <div *ngIf="sidenavType == sidenavEnum.UserProfile" class="description-container"><strong>About:&nbsp;</strong>{{user.description}}</div>
+    <div *ngIf="sidenavType == sidenavEnum.EditUserProfile" class="edit-profile-form-container">
+        <div class="form-title">Edit Profile</div>
+        <form [formGroup]="editUserProfileForm!" (submit)="onSubmit()" class="edit-profile-form">
+        
+            <mat-form-field appearance="fill">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="email" type="email">
+                <mat-error *ngIf="editUserProfileForm!.get('email')?.invalid && (editUserProfileForm!.get('email')?.dirty || editUserProfileForm!.get('email')?.touched)">
+                    Please provide a valid email.
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Password</mat-label>
+                <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password">
+                <mat-icon matSuffix (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+                <mat-error *ngIf="editUserProfileForm!.get('password')?.invalid && (editUserProfileForm!.get('password')?.dirty || editUserProfileForm!.get('password')?.touched)">
+                    Password is required.
+                </mat-error>
+            </mat-form-field>
+          
+            <mat-form-field appearance="fill">
+                <mat-label>New Password</mat-label>
+                <input matInput type="password" formControlName="newPassword">
+                <mat-icon matSuffix (click)="hideNewPassword = !hideNewPassword">{{hideNewPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+                <mat-label>About me</mat-label>
+                <textarea matInput placeholder="There isn't much to tell..." formControlName="description" style="height: 140px;"></textarea>
+            </mat-form-field>
+
+            <mat-error *ngIf="error" style="margin-bottom: 10px;">{{error.message}}</mat-error>
+
+            <div class="button-container">
+                <button mat-raised-button color="primary" type="submit" [disabled]="!editUserProfileForm!.valid" class="edit-button">Edit</button>
+            </div>
+
+        </form>
+    </div>
 </div>

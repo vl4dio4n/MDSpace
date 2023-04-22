@@ -14,7 +14,7 @@
                     <div *ngIf="!isFirst && messages[i].senderId == messages[i - 1].senderId"></div>
                     <div class="text-container">
                         <div style="padding-right: 35px;">
-                            <p *ngIf="isFirst || messages[i].senderId != messages[i - 1].senderId" class="text-element username">@{{ message.senderUsername }}</p>
+                            <p *ngIf="isFirst || messages[i].senderId != messages[i - 1].senderId" class="text-element"><span class="username" (click)="onUsernameClicked(message.senderUsername)">@{{ message.senderUsername }}</span></p>
                             <p class="text-element">{{ message.content }}</p>
                         </div>
                         <p class="text-element" class="send-time">{{ message.timestamp | hoursMinutes }} </p>
@@ -24,7 +24,7 @@
                 <div *ngIf="message.senderUsername == sessionUser.username" class="message-list-item-container">
                     <div class="text-container">
                         <div style="padding-right: 35px;">
-                            <p *ngIf="isFirst || messages[i].senderId != messages[i - 1].senderId" class="text-element username">@{{ message.senderUsername }}</p>
+                            <p *ngIf="isFirst || messages[i].senderId != messages[i - 1].senderId" class="text-element"><span class="username" (click)="onUsernameClicked(message.senderUsername)">@{{ message.senderUsername }}</span></p>
                             <p class="text-element">{{ message.content }}</p>
                         </div>
                         <p class="text-element" class="send-time">{{ message.timestamp | hoursMinutes }} </p>
