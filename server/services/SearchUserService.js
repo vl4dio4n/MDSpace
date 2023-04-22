@@ -8,6 +8,7 @@ const { sequelize } = require('../db');
 const { ContactGroup } = require('../utils/ContactGroup');
 const { ContactThread } = require('../utils/ContactThread');
 const { ContactMessage } = require('../utils/ContactMessage');
+const { UserProfile } = require('../utils/UserProfile');
 
 
 class SearchUserService {
@@ -95,6 +96,24 @@ class SearchUserService {
             return res.json({error: undefined, content: groups});
         } catch(err) {
             const error = new CustomError('DatabaseError', 'There was a problem getting the contacts. You should panic!');
+            return res.json({error, content: undefined});
+        }
+    }
+
+    static async getUserProfile(req, res, next){
+        const username = req.query.data;
+        
+        try{
+            const user = await User.findOne({ where: {username: username } });
+            if(!user){
+                const error = new CustomError('CannotFindUser', "User doesn't exist");
+                return res.json({error, content: undefined});
+            }
+            const userProfile = new UserProfile(user.username, user.email, user.description, false);
+
+            return res.json({ error: undefined, content: userProfile})
+        } catch (err) {
+            const error = new CustomError('DatabaseError', "There was a problem getting user's profile. You should panic!");
             return res.json({error, content: undefined});
         }
     }

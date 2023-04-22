@@ -1,0 +1,9 @@
+<div class="user-profile-container">
+    <div class="avatar-container">
+        <img src="assets/images/user.png" class="avatar">
+    </div>
+    <div class="username-container username">@{{user?.username}}</div>
+    <div class="status-container status">{{user?.isOnline ? "online" : "offline"}}</div>
+    <mat-divider></mat-divider>
+    <div class="description-container"><strong>About:&nbsp;</strong>{{user?.description}}</div>
+</div>

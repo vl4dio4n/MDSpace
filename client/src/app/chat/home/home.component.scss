@@ -83,3 +83,23 @@ app-chat-box{
     height: 100%;
     box-sizing: border-box;
 }
+
+.sidenav-container{
+    height: 100%;
+    background: linear-gradient(to bottom right, #000000, #94b1c0);
+}
+
+.sidenav-close-container,
+.sidenav-content-container{
+    width: 400px;
+    box-sizing: border-box;
+}
+
+.sidenav{
+    background-color: rgb(66, 66, 66, 0.4);
+    box-sizing: border-box;
+}
+
+.sidenav-close-button{
+    background-color: transparent;
+}

@@ -10,6 +10,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 @NgModule({
   declarations: [],
@@ -26,7 +27,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatDividerModule,
     MatBadgeModule,
     MatListModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatSidenavModule
   ]
 })
 export class MaterialModule { }

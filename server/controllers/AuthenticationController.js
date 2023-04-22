@@ -38,7 +38,8 @@ class AuthenticationController{
             const sessionUser = {
                 username: username,
                 email: email,
-                description: description
+                description: description,
+                isOnline: true
             }
             req.session.user = sessionUser;
 
@@ -65,7 +66,8 @@ class AuthenticationController{
             const sessionUser = {
                 username: user.username,
                 email: user.email,
-                description: user.description
+                description: user.description,
+                isOnline: true
             }
             req.session.user = sessionUser;
 

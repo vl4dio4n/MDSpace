@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { IResponse } from '../interfaces/response-interfacce';
 import { IGroup } from '../interfaces/group-interface';
+import { IUser } from '../interfaces/user-interface';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +19,9 @@ export class SearchService {
 
   getContacts(): Observable<IResponse<IGroup[]>>{
     return this.http.get<IResponse<IGroup[]>>('/api/get-contacts');
+  }
+
+  getUserProfile(data: string): Observable<IResponse<IUser>>{
+    return this.http.get<IResponse<IUser>>('/api/get-user-profile', { params: { data: data } });
   }
 }

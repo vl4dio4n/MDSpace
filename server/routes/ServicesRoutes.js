@@ -7,6 +7,7 @@ const servicesRoutes = express.Router();
 
 servicesRoutes.get('/search-user', AuthenticationController.isAuthenticated, SearchUserService.searchUser);
 servicesRoutes.get('/get-contacts', AuthenticationController.isAuthenticated, SearchUserService.getContacts);
+servicesRoutes.get('/get-user-profile', AuthenticationController.isAuthenticated, SearchUserService.getUserProfile);
 servicesRoutes.get('/get-messages', AuthenticationController.isAuthenticated, ChatService.getMessages);
 
 module.exports = { servicesRoutes };

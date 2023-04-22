@@ -23,3 +23,90 @@
     text-align: center;
     align-items: center;
 }
+
+.message-container-inner{
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.message-container-outer{
+    display: block;
+    width: 100%;
+}
+
+.align-left{
+    justify-content: left;
+}
+
+.align-right{
+    justify-content: right;
+    margin-right: 15px;
+}
+
+.messages-list{
+    box-sizing: border-box;
+    max-height: 600px;
+    overflow-y: scroll;
+}
+
+.message-list-item-container{
+    max-width: 60%;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 5px;
+    box-sizing: border-box;
+}
+
+.avatar{
+    height: 40px;
+    width: 40px;
+}
+
+
+.text-container{
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 5px 10px 5px 10px;
+    background-color: rgb(194, 24, 91, 0.8);
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.text-element{
+    color: white;
+    margin: 0;
+}
+
+.send-time{
+    text-align: right;
+    font-size: 0.9em;
+    color: rgb(200, 200, 200);
+    margin: 0px;
+    line-height: 0.9em;
+}
+
+.username{
+    font-weight: bold;
+    color: rgb(190, 190, 190);
+}
+
+.date-section-container{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    border-bottom: 1px solid rgb(100, 100, 100);
+    margin-bottom: 20px;
+}
+
+.date-section{
+    color: white;
+    background-color: rgb(194, 24, 91, 0.8);
+    width: fit-content;
+    padding: 5px 10px 5px 10px;
+    border-radius: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

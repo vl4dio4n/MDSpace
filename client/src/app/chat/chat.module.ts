@@ -7,13 +7,15 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ContactsListComponent } from './contacts-list/contacts-list.component';
 import { SharedModule } from '../shared/shared.module';
 import { ChatBoxComponent } from './chat-box/chat-box.component';
+import { UserProfileComponent } from './user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
     SearchUserComponent,
     ContactsListComponent,
-    ChatBoxComponent
+    ChatBoxComponent,
+    UserProfileComponent
   ],
   imports: [
     CommonModule,
