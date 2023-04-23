@@ -1,12 +1,19 @@
 # allFriends
 
-## The team
+## Authors
 
-The allFriends team has 2 members, both 2nd year computer science students at University of Bucharest, group 251: [Cristina Tîmbur](https://github.com/cristina-timbur) and [Vlad-Ioan Bîrsan](https://github.com/vl4dio4n).
+- [Cristina Tîmbur](https://github.com/cristina-timbur), 251
+- [Vlad-Ioan Bîrsan](https://github.com/vl4dio4n), 251
 
-## The app
+## App Description and Features
 
 allFriends is a video conferencing and chatting application designed to allow users easily create a free account and start conversations with other peers via messages or video calls. Converstions are of two types, p2p or group. However, regardless of their type, they can be splitted in any number of threads in order to help users beeter organise the messaged based on the topic. In p2p chats, any party is allowed to create communication threads. On the other hand, in group converstions, only users with admin role have this privilege. Any app user, can create groups and add members to them, implicitly having a role of admin (group roles are granted by group's admins). Moreover, in any p2p or group chat there is the possibility to make video calls, which are private to that communication channel, meaning that users from other conversations can't join them. Despite that, the app is still awesome.
+
+## Technologies
+
+- **Angular** for frontend
+- **Express** for backend
+- **JavaScript**
 
 ## User stories
 
@@ -37,14 +44,26 @@ allFriends is a video conferencing and chatting application designed to allow us
 5. As a user, I would like to be able to send other kind of content too, like files, images, videos, etc.
 6. As a user, I would like to have a chat box associated with the video call.
 
-## UML
+## UML (Use Case Diagram)
 
-[UML Diagram](./allFriends.pdf)
+- [UML Diagram](./allFriends.pdf)
+- [Use Case Diagram](./uml.pdf)
 
 ## Backlog
 
 Github repo: https://github.com/vl4dio4n/MDSpace <br/>
 Trello page: https://trello.com/b/pADk2non/tasks-board
+
+# Project Checklist
+- user stories, backlog creation - 2 pct ✅ 
+- design/architecture/UML - 2 pct ✅ 
+- source control (branch creation, merge/rebase, minim 10 commits) - 2 pct
+- automatic testing (unit or integration) - 2 pct
+- bug reporting - 1 pct 
+- design patterns - 1 pct
+- refactoring, code standards - 1 pct
+- comentarii cod - 1 pct
+- folosirea unui tool de AI - 1 pct
 
 ## Demo
 
