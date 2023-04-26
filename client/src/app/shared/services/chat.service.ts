@@ -6,7 +6,8 @@ import { Observable } from 'rxjs';
 import { IMessage } from '../interfaces/message-interface';
 import { HttpClient } from '@angular/common/http';
 import { IGroupInfo } from '../interfaces/group-info-interface';
-import { IEditGroupProfile } from '../interfaces/edit-group-profile';
+import { IEditGroupProfile } from '../interfaces/edit-group-profile-interface';
+import { IUserGroup } from '../interfaces/user-group-interface';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,18 @@ export class ChatService {
 
   editGroupProfile(data: IEditGroupProfile): Observable<IResponse<IGroupInfo>>{
     return this.http.post<IResponse<IGroupInfo>>('/api/edit-group-profile', data);
+  }
+
+  kickGroupMember(data: IUserGroup): Observable<IResponse<boolean>>{
+    return this.http.post<IResponse<boolean>>('/api/kick-group-member', data);
+  }
+
+  promoteGroupMember(data: IUserGroup): Observable<IResponse<boolean>>{
+    return this.http.post<IResponse<boolean>>('/api/promote-group-member', data);
+  }
+
+  demoteGroupMember(data: IUserGroup): Observable<IResponse<boolean>>{
+    return this.http.post<IResponse<boolean>>('/api/demote-group-member', data);
   }
 
   sendMessage(msg: string): void{

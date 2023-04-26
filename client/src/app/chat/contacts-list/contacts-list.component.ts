@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChange, SimpleChanges } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { IResponse } from 'src/app/shared/interfaces/response-interfacce';
 import { SearchService } from 'src/app/shared/services/search.service';
@@ -11,9 +11,10 @@ import { IShortGroupInfo } from 'src/app/shared/interfaces/short-group-info-inte
   templateUrl: './contacts-list.component.html',
   styleUrls: ['./contacts-list.component.scss']
 })
-export class ContactsListComponent implements OnInit{
+export class ContactsListComponent implements OnInit, OnChanges{
   @Output() selectedThread = new EventEmitter<IShortThreadInfo>();
   @Output() selectedGroup = new EventEmitter<IShortGroupInfo>();
+  @Input() updated = false; 
   lastGroupId?: number; 
   contacts: IGroup[] = [];  
 
@@ -23,7 +24,14 @@ export class ContactsListComponent implements OnInit{
     this.searchService.getContacts().subscribe((response: IResponse<IGroup[]>) => {
       if(response.content){
         this.contacts = response.content;
-        console.log(this.contacts);
+      }
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.searchService.getContacts().subscribe((response: IResponse<IGroup[]>) => {
+      if(response.content){
+        this.contacts = response.content;
       }
     });
   }

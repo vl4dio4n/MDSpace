@@ -3,10 +3,10 @@
         <img src="assets/images/user.png" class="avatar">
     </div>
     <div class="group-name-container group-name">{{groupInfo?.groupName}}</div>
-    <div class="description-container"><strong>Description:&nbsp;</strong>{{groupInfo?.description}}</div>
-    <mat-divider></mat-divider>
     
     <div *ngIf="sidenavType == sidenavEnum.GroupProfile" class="group-members-container">
+        <div class="description-container"><strong>Description:&nbsp;</strong>{{groupInfo?.description}}</div>
+        <mat-divider></mat-divider>
         <div class="container-title">Members</div>
         <div class="members-list">
             <div *ngFor="let member of groupInfo?.members" class="list-item">
@@ -16,7 +16,20 @@
                     <p class="member-role"><span>{{member.role}}</span></p>
                 </div>
                 <div class="actions-container">
-                    <button mat-flat-button class="member-action-button" title="Kick"><mat-icon>person_remove</mat-icon></button> 
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="group-member-actions" *ngIf="sessionUserRole == groupRolesEnum.Admin && sessionUser.username != member.username">
+                        <mat-icon>more_horiz</mat-icon>
+                    </button>
+                      <mat-menu #menu="matMenu">
+                        <button mat-menu-item *ngIf="member.role == groupRolesEnum.Member" (click)="promoteMember(member.username)">
+                          <span>Promote</span>
+                        </button>
+                        <button mat-menu-item *ngIf="member.role == groupRolesEnum.Admin" (click)="demoteMember(member.username)">
+                          <span>Demote</span>
+                        </button>
+                        <button mat-menu-item (click)="kickMember(member.username)">
+                          <span>Kick</span>
+                        </button>
+                      </mat-menu>
                 </div>
             </div>
         </div>
