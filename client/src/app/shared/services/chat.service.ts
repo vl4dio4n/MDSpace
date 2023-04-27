@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { IGroupInfo } from '../interfaces/group-info-interface';
 import { IEditGroupProfile } from '../interfaces/edit-group-profile-interface';
 import { IUserGroup } from '../interfaces/user-group-interface';
+import { ICreateGroup } from '../interfaces/create-group-interface';
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +40,14 @@ export class ChatService {
 
   demoteGroupMember(data: IUserGroup): Observable<IResponse<boolean>>{
     return this.http.post<IResponse<boolean>>('/api/demote-group-member', data);
+  }
+
+  createGroup(data: ICreateGroup): Observable<IResponse<boolean>>{
+    return this.http.post<IResponse<boolean>>('/api/create-group', data);
+  }
+
+  addUsers(data: string[]): Observable<IResponse<boolean>>{
+    return this.http.post<IResponse<boolean>>('/api/add-users', data);
   }
 
   sendMessage(msg: string): void{

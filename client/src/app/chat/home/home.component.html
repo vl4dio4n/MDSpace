@@ -14,7 +14,10 @@
         </div>
         <div class="sidenav-content-container">
             <app-user-profile *ngIf="this.sidenavType == sidenavEnum.UserProfile || this.sidenavType == sidenavEnum.EditUserProfile" [username]="data!" [sidenavType]="sidenavType" (profileUpdated)="sidenavType = sidenavEnum.UserProfile"></app-user-profile>
-            <app-group-profile *ngIf="this.sidenavType == sidenavEnum.GroupProfile || this.sidenavType == sidenavEnum.EditGroupProfile" [groupId]="selectedGroup!.groupId" [sidenavType]="sidenavType" (profileUpdated)="groupUpdated()" (selectedUsername)="showUserProfile($event)"></app-group-profile>
+            <app-group-profile *ngIf="this.sidenavType == sidenavEnum.GroupProfile || this.sidenavType == sidenavEnum.EditGroupProfile" [groupId]="selectedGroup!.groupId" [sidenavType]="sidenavType" (profileUpdated)="onGroupUpdated()" (selectedUsername)="showUserProfile($event)"></app-group-profile>
+            <app-create-group *ngIf="this.sidenavType == sidenavEnum.CreateGroup" (groupCreated)="onGroupCreated()"></app-create-group>
+            <app-add-member *ngIf="this.sidenavType == sidenavEnum.AddUser" [groupId]="selectedGroup!.groupId" (usersAdded) = "onUsersAdded()"></app-add-member>
+            <div *ngIf="this.sidenavType == sidenavEnum.Empty"></div>
         </div>
     </mat-sidenav>
     <mat-sidenav-content>
@@ -34,7 +37,7 @@
                                     <mat-icon>account_box</mat-icon>
                                     <span>My Profile</span>
                                 </button>
-                                <button mat-menu-item>
+                                <button mat-menu-item (click)="createGroup()">
                                     <mat-icon>group_add</mat-icon>
                                     <span>Create Group</span>
                                 </button>
@@ -58,8 +61,8 @@
                     <mat-card-header *ngIf="selectedThread" class="chat-box-card-header">
                         <img mat-card-avatar src="assets/images/user.png">
                         <mat-card-title class="chat-box-title">
-                            <span class="group-name-chat-box-header" (click)="onGroupInfoRequested()">{{selectedGroup!.groupName}}</span>&nbsp;
-                            <span class="thread-name-chat-box-header">#{{selectedThread!.threadName}}</span>
+                            <span class="group-name-chat-box-header" (click)="onGroupInfoRequested()">{{selectedGroup?.groupName}}</span>&nbsp;
+                            <span class="thread-name-chat-box-header">#{{selectedThread.threadName}}</span>
                         </mat-card-title>
                         <mat-card-subtitle *ngIf="this.groupInfo?.type == groupTypeEnum.User">online</mat-card-subtitle>
                         <div class="card-header-buttons">
@@ -75,7 +78,7 @@
                                     <mat-icon>account_box</mat-icon>
                                     <span>Details</span>
                                 </button>
-                                <button mat-menu-item *ngIf="sessionUserRole == groupRolesEnum.Admin">
+                                <button mat-menu-item *ngIf="sessionUserRole == groupRolesEnum.Admin" (click)="onAddUserRequested()">
                                     <mat-icon>person_add</mat-icon>
                                     <span>Add Member</span>
                                 </button>

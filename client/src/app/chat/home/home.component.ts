@@ -89,6 +89,7 @@ export class HomeComponent implements OnChanges {
   async closeSidenav(): Promise<void>{
     if(this.sidenav.opened){
       await this.sidenav.close();
+      this.sidenavType = SidenavEnum.Empty;
     }
   }
 
@@ -124,16 +125,37 @@ export class HomeComponent implements OnChanges {
     this.toggleSidenav(SidenavEnum.GroupProfile, groupId); 
   }
 
+  async createGroup(): Promise<void>{
+    if(this.sidenav.opened)
+      await this.closeSidenav();
+    this.toggleSidenav(SidenavEnum.CreateGroup);
+  }
+
   onGroupInfoRequested(): void {
     if(this.groupInfo!.type == GroupTypeEnum.User)
       this.showUserProfile(this.selectedGroup!.groupName);
     else
       this.showGroupProfile(this.selectedGroup!.groupId);
   }
+
+  async onAddUserRequested(): Promise<void> {
+    if(this.sidenav.opened)
+      await this.sidenav.close();
+    this.toggleSidenav(SidenavEnum.AddUser);
+  }
   
-  async groupUpdated(): Promise<void> {
+  async onGroupUpdated(): Promise<void> {
     this.sidenavType = SidenavEnum.GroupProfile;
     this.contactsUpdated = !this.contactsUpdated;
     this.ngOnChanges();
+  }
+
+  async onGroupCreated(): Promise<void> {
+    await this.closeSidenav();
+    this.contactsUpdated = !this.contactsUpdated;
+  }
+
+  async onUsersAdded(): Promise<void>{
+    await this.closeSidenav();
   }
 }

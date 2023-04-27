@@ -6,8 +6,8 @@
 
 <div *ngIf="message.length > 0" class="message"><em>{{message}}</em></div>
 
-<mat-list *ngIf="searchResults.length > 0">
-    <mat-list-item *ngFor="let result of searchResults">
+<mat-list *ngIf="searchResults.length > 0" [style.max-height.px]="maxHeight">
+    <mat-list-item *ngFor="let result of searchResults" (click)="onUserSelected(result.username)">
         <img matListItemAvatar src="assets/images/user.png" class="avatar">
         <div matListItemTitle>{{ result.username }}</div>
         <div matListItemLine>{{ result.isOnline ? "online" : "offline" }}</div>

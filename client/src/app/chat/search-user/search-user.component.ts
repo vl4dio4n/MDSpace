@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { IResponse } from 'src/app/shared/interfaces/response-interfacce';
@@ -15,6 +15,8 @@ export class SearchUserComponent {
   searchResults: ISearchUser[] = [];
   message = "";
   @Output() hasInput = new EventEmitter<boolean>();
+  @Output() userSelected = new EventEmitter<string>();
+  @Input() maxHeight = 570;
 
   constructor(private searchService: SearchService){
     this.searchControl.valueChanges.pipe(debounceTime(500)).subscribe(value => {
@@ -36,5 +38,9 @@ export class SearchUserComponent {
         this.message = "";
       }
     })
+  }
+
+  onUserSelected(username: string) {
+    this.userSelected.emit(username);
   }
 }

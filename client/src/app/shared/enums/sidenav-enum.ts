@@ -5,5 +5,6 @@ export enum SidenavEnum{
     EditGroupProfile = 'edit-group-profile',
     AddUser = 'add-user',
     AddThread = 'add-thread',
-    CreateGroup = 'create-group'
+    CreateGroup = 'create-group',
+    Empty = 'empty'
 }

@@ -1,0 +1,23 @@
+.form-title{
+    text-align: center;
+    padding: 20px;
+    font-size: 1.5em;
+}
+
+.edit-profile-form{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.button-container{
+    display: flex;
+    margin-bottom: 10px;
+    justify-content: center;
+    text-align: center;
+}
+
+.create-button{
+    width: 100%;
+}

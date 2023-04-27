@@ -12,6 +12,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatMenuModule } from '@angular/material/menu';
+import {MatChipsModule} from '@angular/material/chips';
 
 @NgModule({
   declarations: [],
@@ -30,7 +31,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatListModule,
     MatExpansionModule,
     MatSidenavModule,
-    MatMenuModule
+    MatMenuModule,
+    MatChipsModule
   ]
 })
 export class MaterialModule { }

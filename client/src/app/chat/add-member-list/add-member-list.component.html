@@ -1,0 +1,12 @@
+<div *ngIf="this.selectedUsers.length > 0" class="selected-users-list">
+    <mat-chip-grid #chipGrid aria-label="Fruit selection">
+        <mat-chip-row *ngFor="let username of this.selectedUsers" (removed)="remove(username)">
+          {{username}}
+          <button matChipRemove [attr.aria-label]="'remove ' + username">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+    </mat-chip-grid>
+</div>
+
+<app-search-user [maxHeight]="maxHeight" (userSelected)="userSelected($event)"></app-search-user>

@@ -9,6 +9,9 @@ import { SharedModule } from '../shared/shared.module';
 import { ChatBoxComponent } from './chat-box/chat-box.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { GroupProfileComponent } from './group-profile/group-profile.component';
+import { CreateGroupComponent } from './create-group/create-group.component';
+import { AddMemberListComponent } from './add-member-list/add-member-list.component';
+import { AddMemberComponent } from './add-member/add-member.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +20,10 @@ import { GroupProfileComponent } from './group-profile/group-profile.component';
     ContactsListComponent,
     ChatBoxComponent,
     UserProfileComponent,
-    GroupProfileComponent
+    GroupProfileComponent,
+    CreateGroupComponent,
+    AddMemberListComponent,
+    AddMemberComponent
   ],
   imports: [
     CommonModule,

@@ -1,0 +1,9 @@
+<div class="add-members-container">
+    <div class="menu-title">Add Members</div>
+    
+    <app-add-member-list [maxHeight]="500" [members]="members" (usersEmitter)="getMembers($event)"></app-add-member-list>
+    
+    <div class="button-container">
+        <button mat-raised-button color="primary" type="submit" [disabled]="newMembers.length == 0" class="add-button" (click)="onAdd()">Add</button>
+    </div>
+</div>

@@ -1,0 +1,28 @@
+<div class="create-group-container">
+    <div class="form-title">Create Group</div>
+    <form [formGroup]="createGroupForm" (submit)="onSubmit()" class="edit-profile-form">
+    
+        <mat-form-field appearance="fill">
+            <mat-label>Group Name</mat-label>
+            <input matInput formControlName="groupName">
+            <mat-error *ngIf="createGroupForm.get('groupName')?.invalid && (createGroupForm.get('groupName')?.dirty || createGroupForm!.get('groupName')?.touched)">
+                Group name is required.
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="example-full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput placeholder="Hmmm, what can I say about it..." formControlName="description" style="height: 140px;"></textarea>
+        </mat-form-field>
+
+        <mat-error *ngIf="error" style="margin-bottom: 10px;">{{error.message}}</mat-error>
+
+        <app-add-member-list [maxHeight]="200" (usersEmitter)="getMembers($event)"></app-add-member-list>
+
+        <div class="button-container">
+            <button mat-raised-button color="primary" type="submit" [disabled]="!createGroupForm.valid" class="create-button">Create</button>
+        </div>
+
+
+    </form>
+</div>
