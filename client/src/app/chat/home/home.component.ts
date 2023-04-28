@@ -12,6 +12,8 @@ import { IShortThreadInfo } from 'src/app/shared/interfaces/short-thread-info-in
 import { GroupTypeEnum } from 'src/app/shared/enums/group-type-enum';
 import { GroupRolesEnum } from 'src/app/shared/enums/group-roles-enum';
 import { IGroupMember } from 'src/app/shared/interfaces/group-member-interface';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateThreadComponent } from '../create-thread/create-thread.component';
 
 @Component({
   selector: 'app-home',
@@ -40,7 +42,8 @@ export class HomeComponent implements OnChanges {
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService,
-    private chatService: ChatService){
+    private chatService: ChatService,
+    private dialog: MatDialog){
     this.sessionUser = this.authenticationService.sessionUser!;
     this.chatService.getMessage();
   }
@@ -157,5 +160,37 @@ export class HomeComponent implements OnChanges {
 
   async onUsersAdded(): Promise<void>{
     await this.closeSidenav();
+  }
+
+  openCreateThreadDialog(): void {
+    const dialogRef = this.dialog.open(CreateThreadComponent, {
+      data: {threadName: ''}
+    });
+
+    dialogRef.afterClosed().subscribe((result: string) => {
+      console.log(result);
+      const newThread = {
+        threadName: result, 
+        groupId: this.selectedGroup!.groupId
+      };
+      this.chatService.createThread(newThread).subscribe((response: IResponse<boolean>) => {
+        if(response.content)
+          this.contactsUpdated = !this.contactsUpdated;
+      })
+    })
+  }
+
+  onGroupLeave(): void {
+    this.chatService.leaveGroup(this.selectedGroup!.groupId).subscribe((response: IResponse<boolean>) => {
+      if(response.content){
+        this.contactsUpdated = !this.contactsUpdated;
+        this.sessionUserRole = undefined;
+        this.selectedThread = undefined;
+        this.selectedGroup = undefined;
+        this.groupInfo = undefined;
+        this.sidenavType = SidenavEnum.Empty;
+        this.closeSidenav();
+      }
+    })
   }
 }

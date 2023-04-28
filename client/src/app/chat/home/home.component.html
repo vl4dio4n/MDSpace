@@ -82,12 +82,12 @@
                                     <mat-icon>person_add</mat-icon>
                                     <span>Add Member</span>
                                 </button>
-                                <button mat-menu-item *ngIf="sessionUserRole == groupRolesEnum.Admin || groupInfo?.type == groupTypeEnum.User">
+                                <button mat-menu-item *ngIf="sessionUserRole == groupRolesEnum.Admin || groupInfo?.type == groupTypeEnum.User" (click)="openCreateThreadDialog()">
                                     <mat-icon>add</mat-icon>
                                     <span>Create Thread</span>
                                 </button>
 
-                                <button mat-menu-item *ngIf="groupInfo?.type == groupTypeEnum.Group">
+                                <button mat-menu-item *ngIf="groupInfo?.type == groupTypeEnum.Group" (click)="onGroupLeave()">
                                     <mat-icon>remove_circle_outline</mat-icon>
                                     <span>Leave Group</span>
                                 </button>

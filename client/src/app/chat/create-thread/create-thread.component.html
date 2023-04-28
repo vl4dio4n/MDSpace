@@ -1,0 +1,11 @@
+<h1 mat-dialog-title class="dialog-title">Create Thread</h1>
+<div mat-dialog-content class="input-container">
+  <mat-form-field appearance="fill">
+    <mat-label>Thread Name</mat-label>
+    <input matInput [(ngModel)]="data.threadName">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions class="buttons-container">
+  <button mat-button (click)="onCancelClick()">Cancel</button>
+  <button mat-button [mat-dialog-close]="data.threadName" cdkFocusInitial [disabled]="data.threadName.length == 0">Create</button>
+</div>

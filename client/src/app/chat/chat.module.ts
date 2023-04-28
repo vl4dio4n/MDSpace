@@ -12,6 +12,8 @@ import { GroupProfileComponent } from './group-profile/group-profile.component';
 import { CreateGroupComponent } from './create-group/create-group.component';
 import { AddMemberListComponent } from './add-member-list/add-member-list.component';
 import { AddMemberComponent } from './add-member/add-member.component';
+import { CreateThreadComponent } from './create-thread/create-thread.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -23,13 +25,15 @@ import { AddMemberComponent } from './add-member/add-member.component';
     GroupProfileComponent,
     CreateGroupComponent,
     AddMemberListComponent,
-    AddMemberComponent
+    AddMemberComponent,
+    CreateThreadComponent
   ],
   imports: [
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
-    SharedModule
+    SharedModule,
+    FormsModule
   ]
 })
 export class ChatModule { }

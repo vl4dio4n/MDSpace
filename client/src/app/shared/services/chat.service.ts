@@ -9,6 +9,7 @@ import { IGroupInfo } from '../interfaces/group-info-interface';
 import { IEditGroupProfile } from '../interfaces/edit-group-profile-interface';
 import { IUserGroup } from '../interfaces/user-group-interface';
 import { ICreateGroup } from '../interfaces/create-group-interface';
+import { ICreateThread } from '../interfaces/create-thread-interface';
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,14 @@ export class ChatService {
 
   addUsers(data: string[]): Observable<IResponse<boolean>>{
     return this.http.post<IResponse<boolean>>('/api/add-users', data);
+  }
+
+  createThread(data: ICreateThread): Observable<IResponse<boolean>>{
+    return this.http.post<IResponse<boolean>>('/api/create-thread', data);
+  }
+
+  leaveGroup(data: number): Observable<IResponse<boolean>>{
+    return this.http.post<IResponse<boolean>>('/api/leave-group', {groupId: data});
   }
 
   sendMessage(msg: string): void{

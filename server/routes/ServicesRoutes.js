@@ -17,5 +17,7 @@ servicesRoutes.post('/promote-group-member', AuthenticationController.isAuthenti
 servicesRoutes.post('/demote-group-member', AuthenticationController.isAuthenticated, ChatService.demoteGroupMember);
 servicesRoutes.post('/create-group', AuthenticationController.isAuthenticated, ChatService.createGroup);
 servicesRoutes.post('/add-users', AuthenticationController.isAuthenticated, ChatService.addUsers);
+servicesRoutes.post('/create-thread', AuthenticationController.isAuthenticated, ChatService.createThread);
+servicesRoutes.post('/leave-group', AuthenticationController.isAuthenticated, ChatService.leaveGroup);
 
 module.exports = { servicesRoutes };

@@ -175,6 +175,34 @@ class ChatService {
             return res.json({error, content: undefined});
         }
     }
+
+    static async createThread(req, res, next) {
+        try {
+            let threadName = req.body.threadName;
+            let groupId = req.body.groupId;
+
+            let thread = new Thread({thread_name: threadName, group_id: groupId});
+            await thread.save();
+
+            return res.json({error: undefined, content: true});
+        } catch (err) {
+            const error = new CustomError('DatabaseError', "There was a problem creating the thread. You should panic!");
+            return res.json({error, content: undefined});
+        }
+    }
+
+    static async leaveGroup(req, res, next) {
+        try {
+            const groupId = req.body.groupId;
+            const userId = (await User.findOne({where: {username: req.session.user.username}})).id;
+
+            await UserGroup.destroy({where: {user_id: userId, group_id: groupId}});
+            return res.json({ error: undefined, content: true });
+        } catch (err) {
+            const error = new CustomError('DatabaseError', "There was a problem leaving the group. You should panic!");
+            return res.json({error, content: undefined});
+        }
+    }
 }
 
 module.exports = {ChatService};

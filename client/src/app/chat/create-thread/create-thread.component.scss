@@ -1,0 +1,19 @@
+.dialog-title {
+    text-align: center;
+}
+
+.buttons-container {
+    padding-left: 24px;
+}
+
+.input-container{
+    width: 400px;
+    display: flex;
+    flex-direction: center;
+    justify-content: column;
+    box-sizing: border-box;
+}
+
+mat-form-field {
+    width: 400px;
+}
