@@ -9,7 +9,7 @@ const { GroupInfo } = require('../utils/GroupInfo');
 const { GroupMember } = require('../utils/GroupMember');
 
 
-class ChatService {
+class GroupsController {
     static async getMessages(req, res, next){
         const threadId = req.query.threadId;
         try {
@@ -43,7 +43,7 @@ class ChatService {
     static async getGroupInfo(req, res, next){
         const groupId = req.query.groupId;
         try {
-            const groupInfo = await ChatService.getGroupInfoFromDB(groupId);
+            const groupInfo = await GroupsController.getGroupInfoFromDB(groupId);
             return res.json({ error: undefined, content: groupInfo });
         } catch (err) {
             const error = new CustomError('DatabaseError', "There was a problem fetching group's info. You should panic!");
@@ -64,7 +64,7 @@ class ChatService {
                 where: {id: groupId}
             });
 
-            const updatedGroup = await ChatService.getGroupInfoFromDB(groupId);
+            const updatedGroup = await GroupsController.getGroupInfoFromDB(groupId);
             return res.json({ error: undefined, content: updatedGroup });
 
         } catch (err) {
@@ -90,7 +90,7 @@ class ChatService {
         try {
             const username = req.body.username;
             const groupId = req.body.groupId;
-            ChatService.updateUserRole(username, groupId, 'admin');
+            GroupsController.updateUserRole(username, groupId, 'admin');
             
             return res.json({ error: undefined, content: true });
         } catch (err) {
@@ -104,7 +104,7 @@ class ChatService {
         try {
             const username = req.body.username;
             const groupId = req.body.groupId;
-            ChatService.updateUserRole(username, groupId, 'member');
+            GroupsController.updateUserRole(username, groupId, 'member');
 
             return res.json({ error: undefined, content: true });
         } catch (err) {
@@ -145,9 +145,9 @@ class ChatService {
             let group = new Group({group_name: groupName, description: description});
             await group.save();
 
-            await ChatService.addUserGroup(group.id, req.session.user.username, 'admin');
+            await GroupsController.addUserGroup(group.id, req.session.user.username, 'admin');
             members.forEach(async (member) => {
-                await ChatService.addUserGroup(group.id, member, 'member');
+                await GroupsController.addUserGroup(group.id, member, 'member');
             });
             
             let thread = new Thread({thread_name: 'general', group_id: group.id});
@@ -166,7 +166,7 @@ class ChatService {
             let groupId = parseInt(members[0]);
             members.splice(0, 1);
             members.forEach(async (member) => {
-                await ChatService.addUserGroup(groupId, member, 'member');
+                await GroupsController.addUserGroup(groupId, member, 'member');
             });
 
             return res.json({error: undefined, content: true});
@@ -205,4 +205,4 @@ class ChatService {
     }
 }
 
-module.exports = {ChatService};
+module.exports = { GroupsController };

@@ -13,7 +13,7 @@ const { UserProfile } = require('../utils/UserProfile');
 const { globals } = require('../global-variables');
 
 
-class SearchUserService {
+class UsersController {
     static serverPassword = globals.serverPassword;
 
     static async searchUser(req, res, next){
@@ -118,7 +118,7 @@ class SearchUserService {
         const username = req.query.data;
         
         try{
-            const userProfile = await SearchUserService.getUserProfileFromDB(username);
+            const userProfile = await UsersController.getUserProfileFromDB(username);
             return res.json({ error: undefined, content: userProfile})
         } catch (err) {
             const error = new CustomError('DatabaseError', "There was a problem getting user's profile. You should panic!");
@@ -138,7 +138,7 @@ class SearchUserService {
                 newPassword = password;
             }
 
-            let encryptedPassword = crypto.scryptSync(password, SearchUserService.serverPassword, 64).toString("hex");
+            let encryptedPassword = crypto.scryptSync(password, UsersController.serverPassword, 64).toString("hex");
             let user = await User.findOne({ where: {
                 password: encryptedPassword,
                 username: username
@@ -148,7 +148,7 @@ class SearchUserService {
                 return res.json({error, content: undefined});
             }
 
-            let encryptedNewPassword = crypto.scryptSync(newPassword, SearchUserService.serverPassword, 64).toString("hex");
+            let encryptedNewPassword = crypto.scryptSync(newPassword, UsersController.serverPassword, 64).toString("hex");
             await User.update({
                 email: email,
                 password: encryptedNewPassword,
@@ -157,7 +157,7 @@ class SearchUserService {
                 where: {username: username},
             });
 
-            const updatedUser = await SearchUserService.getUserProfileFromDB(username);
+            const updatedUser = await UsersController.getUserProfileFromDB(username);
 
             return res.json({ error: undefined, content: updatedUser});
         } catch (err) {
@@ -167,4 +167,4 @@ class SearchUserService {
     }
 }
 
-module.exports = { SearchUserService };
+module.exports = { UsersController };

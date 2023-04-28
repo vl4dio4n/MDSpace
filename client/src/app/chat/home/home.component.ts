@@ -168,15 +168,16 @@ export class HomeComponent implements OnChanges {
     });
 
     dialogRef.afterClosed().subscribe((result: string) => {
-      console.log(result);
-      const newThread = {
-        threadName: result, 
-        groupId: this.selectedGroup!.groupId
-      };
-      this.chatService.createThread(newThread).subscribe((response: IResponse<boolean>) => {
-        if(response.content)
-          this.contactsUpdated = !this.contactsUpdated;
-      })
+      if(result){
+        const newThread = {
+          threadName: result, 
+          groupId: this.selectedGroup!.groupId
+        };
+        this.chatService.createThread(newThread).subscribe((response: IResponse<boolean>) => {
+          if(response.content)
+            this.contactsUpdated = !this.contactsUpdated;
+        })
+      }
     })
   }
 

@@ -15,8 +15,8 @@ const { Message } = require('./models/Message');
 const { LastActivity } = require('./models/LastActivity');
 
 const { authRoutes } = require('./routes/AuthenticationRoutes');
-const { servicesRoutes } = require('./routes/ServicesRoutes');
-
+const { usersRoutes } = require('./routes/UsersRoutes');
+const { groupsRoutes } = require('./routes/GroupsRoutes');
 
 sequelize.sync();
 
@@ -61,7 +61,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.use(authRoutes);
-app.use(servicesRoutes);
+app.use(usersRoutes);
+app.use(groupsRoutes);
+
 
 io.on('connection', socket => {
     console.log('New WS Connection...');
