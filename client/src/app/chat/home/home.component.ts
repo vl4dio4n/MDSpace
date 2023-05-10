@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnChanges, OnDestroy, SimpleChanges, ViewChild } from '@angular/core';
 import { IUser } from 'src/app/shared/interfaces/user-interface';
 import { IResponse } from 'src/app/shared/interfaces/response-interfacce';
 import { AuthenticationService } from 'src/app/shared/services/authentication.service';
@@ -14,13 +14,17 @@ import { GroupRolesEnum } from 'src/app/shared/enums/group-roles-enum';
 import { IGroupMember } from 'src/app/shared/interfaces/group-member-interface';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateThreadComponent } from '../create-thread/create-thread.component';
+import { IMessage } from 'src/app/shared/interfaces/message-interface';
+import { Subject, Subscription } from 'rxjs';
+import { IUserStatus } from 'src/app/shared/interfaces/user-status-interface';
+import { IUserTyping } from 'src/app/shared/interfaces/user-typing-interface';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnChanges {
+export class HomeComponent implements OnChanges, OnDestroy {
   sessionUser: IUser;
   sessionUserRole?: GroupRolesEnum;
   searchBarHasInput = false;
@@ -38,14 +42,39 @@ export class HomeComponent implements OnChanges {
   groupRolesEnum = GroupRolesEnum;
 
   contactsUpdated = false;
+  userTyping?: IUserTyping;
+
+  private newMessageSubscription: Subscription;
+  private userStatusSubscription: Subscription;
+  private userTypingSubscription: Subscription;
+  messageSubject: Subject<IMessage> = new Subject<IMessage>();
 
   constructor(
     private router: Router,
     private authenticationService: AuthenticationService,
     private chatService: ChatService,
     private dialog: MatDialog){
-    this.sessionUser = this.authenticationService.sessionUser!;
-    this.chatService.getMessage();
+    
+      this.sessionUser = this.authenticationService.sessionUser!;
+      this.chatService.connect(this.sessionUser.username)
+    
+      this.newMessageSubscription = this.chatService.newMessageListener().subscribe((newMessage: IMessage) => {
+        if(newMessage.threadId == this.selectedThread?.threadId){
+          this.messageSubject.next(newMessage);
+        }
+      });
+      
+      this.userStatusSubscription = this.chatService.userStatusListener().subscribe((userStatus: IUserStatus) => {
+        if(this.groupInfo && this.groupInfo.type == GroupTypeEnum.User && this.selectedGroup!.groupName == userStatus.username){
+          this.groupInfo.isOnline = userStatus.status;
+        }
+      });
+
+      this.userTypingSubscription = this.chatService.userTypingListener().subscribe((userTyping: IUserTyping) => {
+        if(this.selectedThread && this.selectedThread.threadId == userTyping.threadId){
+          this.userTyping = userTyping; 
+        }
+      })
   }
 
   ngOnChanges(): void {
@@ -64,6 +93,7 @@ export class HomeComponent implements OnChanges {
     this.authenticationService.signout().subscribe((response: IResponse<void>) => {
       this.authenticationService.sessionUser = undefined;  
       this.router.navigate(['/signin']);
+      this.chatService.disconnect();
     });
   }
 
@@ -193,5 +223,11 @@ export class HomeComponent implements OnChanges {
         this.closeSidenav();
       }
     })
+  }
+
+  ngOnDestroy(): void {
+    this.newMessageSubscription.unsubscribe();
+    this.userStatusSubscription.unsubscribe();
+    this.userTypingSubscription.unsubscribe();
   }
 }

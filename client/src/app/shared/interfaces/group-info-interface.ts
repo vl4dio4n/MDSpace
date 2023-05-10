@@ -7,4 +7,5 @@ export interface IGroupInfo{
     description?: string; 
     type: GroupTypeEnum;
     members: IGroupMember[];
+    isOnline: boolean;
 }

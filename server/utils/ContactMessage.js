@@ -1,13 +1,17 @@
 class ContactMessage{
     messageId;
+    threadId;
+    groupId;
     senderId;
     senderUsername;
     content;
     timestamp;
     type;
 
-    constructor(messageId, senderId, senderUsername, content, timestamp, type){
+    constructor(messageId, threadId, groupId, senderId, senderUsername, content, timestamp, type){
         this.messageId = messageId;
+        this.threadId = threadId;
+        this.groupId = groupId;
         this.senderId = senderId;
         this.senderUsername = senderUsername;
         this.content = content;
@@ -21,6 +25,22 @@ class ContactMessage{
 
     set messageId(newMessageId){
         this._messageId = newMessageId;
+    }
+
+    get threadId(){
+        return this._threadId;
+    }
+
+    set threadId(newThreadId){
+        this._threadId = newThreadId;
+    }
+
+    get groupId(){
+        return this._groupId;
+    }
+
+    set groupId(newGroupId){
+        this._groupId = newGroupId;
     }
 
     get senderId(){

@@ -11,6 +11,7 @@ const { ContactThread } = require('../utils/ContactThread');
 const { ContactMessage } = require('../utils/ContactMessage');
 const { UserProfile } = require('../utils/UserProfile');
 const { globals } = require('../global-variables');
+const { ChatController } = require('./ChatController');
 
 
 class UsersController {
@@ -27,7 +28,8 @@ class UsersController {
                     }
                 }
             });
-            const response = users.map(user => new SearchUser(user.username, false));
+    
+            const response = users.map(user => new SearchUser(user.username, ChatController.isUserOnline(user.username)));
             return res.json({error: undefined, content: response});
         } catch (err) {
             const error = new CustomError('DatabaseError', 'There was a problem searching the users. You should panic!');
@@ -82,7 +84,7 @@ class UsersController {
                         WHERE "Messages".timestamp IN (SELECT max("timestamp") FROM "Messages" AS "Message" WHERE "Message"."thread_id" = ${thread.threadId});
                     `))[0];
                     if(message.length){
-                        thread.lastMessage = new ContactMessage(message[0].message_id, message[0].sender_id, message[0].username, message[0].content, message[0].timestamp, message[0].type);
+                        thread.lastMessage = new ContactMessage(message[0].message_id, thread.threadId, group.groupId, message[0].sender_id, message[0].username, message[0].content, message[0].timestamp, message[0].type);
                     }
 
                     thread.unseenMessages = parseInt((await sequelize.query(`
@@ -111,7 +113,7 @@ class UsersController {
             FROM "Users" u
             WHERE u.username = '${username}';
         `))[0][0];
-        return new UserProfile(user.username, user.email, user.description, user.last_activity, false);
+        return new UserProfile(user.username, user.email, user.description, user.last_activity, ChatController.isUserOnline(user.username));
     }
 
     static async getUserProfile(req, res, next){

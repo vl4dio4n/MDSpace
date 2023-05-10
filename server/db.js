@@ -12,7 +12,8 @@ const pool = new Pool({
 
 const sequelize = new Sequelize('AllFriends', 'vl4dio4n', 'Elena1973', {
     host: "localhost",
-    dialect: "postgres"
+    dialect: "postgres",
+    logging: false
 });
 
 module.exports = { pool, sequelize }

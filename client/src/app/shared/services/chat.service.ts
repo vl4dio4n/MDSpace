@@ -10,6 +10,10 @@ import { IEditGroupProfile } from '../interfaces/edit-group-profile-interface';
 import { IUserGroup } from '../interfaces/user-group-interface';
 import { ICreateGroup } from '../interfaces/create-group-interface';
 import { ICreateThread } from '../interfaces/create-thread-interface';
+import { SocketEventsEnum } from '../enums/socket-events-enum';
+import { INewMessage } from '../interfaces/new-message-interface';
+import { IUserStatus } from '../interfaces/user-status-interface';
+import { IUserTyping } from '../interfaces/user-typing-interface';
 
 @Injectable({
   providedIn: 'root'
@@ -59,15 +63,33 @@ export class ChatService {
     return this.http.post<IResponse<boolean>>('/api/leave-group', {groupId: data});
   }
 
-  sendMessage(msg: string): void{
-    this.socket.emit('message', msg);
+  /********************************************** Socket ********************************************/
+
+  connect(username: string): void{
+    this.socket.emit(SocketEventsEnum.SignIn, username)
   }
 
-  getMessage(): void{
-    this.socket.on('message', (msg: string) => {
-      console.log(msg);
-    });
+  disconnect(): void {
+    this.socket.emit(SocketEventsEnum.SignOut);
   }
 
+  sendMessage(message: INewMessage): void{
+    this.socket.emit(SocketEventsEnum.NewMessage, message);
+  }
 
+  newMessageListener(): Observable<IMessage>{
+    return this.socket.fromEvent<IMessage>(SocketEventsEnum.NewMessage);
+  }
+
+  userStatusListener(): Observable<IUserStatus> {
+    return this.socket.fromEvent<IUserStatus>(SocketEventsEnum.UserStatus);
+  }
+
+  userTyping(userTyping: IUserTyping): void {
+    this.socket.emit(SocketEventsEnum.UserTyping, userTyping);
+  }
+
+  userTypingListener(): Observable<IUserTyping> {
+    return this.socket.fromEvent<IUserTyping>(SocketEventsEnum.UserTyping)
+  }
 }

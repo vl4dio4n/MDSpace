@@ -7,19 +7,22 @@ const { ContactMessage } = require('../utils/ContactMessage');
 const { CustomError } = require('../utils/Error');
 const { GroupInfo } = require('../utils/GroupInfo');
 const { GroupMember } = require('../utils/GroupMember');
+const { ChatController } = require('./ChatController');
 
 
 class GroupsController {
     static async getMessages(req, res, next){
         const threadId = req.query.threadId;
         try {
+            const groupId =  (await Thread.findOne({where: { thread_id: threadId }})).group_id;
+            
             let messages = (await sequelize.query(`
                 SELECT "Messages".message_id, "Messages".sender_id, "Users".username, "Messages".content, "Messages".timestamp, "Messages".type
                 FROM "Messages" 
                 JOIN "Users" ON "Users".id = "Messages".sender_id
                 WHERE "Messages".thread_id = ${threadId}
                 ORDER BY timestamp;
-            `))[0].map(message => new ContactMessage(message.message_id, message.sender_id, message.username, message.content, message.timestamp, message.type));
+            `))[0].map(message => new ContactMessage(message.message_id, threadId, groupId, message.sender_id, message.username, message.content, message.timestamp, message.type));
         
             return res.json({error: undefined, content: messages});
         } catch (err){
@@ -28,22 +31,29 @@ class GroupsController {
         }
     }
 
-    static async getGroupInfoFromDB(groupId){
+    static async getGroupInfoFromDB(groupId, sessionUser){
         const group = await Group.findOne({ where: { id: groupId }});
-        const groupInfo = new GroupInfo(group.id, group.group_name, group.description, group.group_name ? 'group' : 'user', []);
+        
+        const groupInfo = new GroupInfo(group.id, group.group_name, group.description, group.group_name ? 'group' : 'user', [], false);
             groupInfo.members = (await sequelize.query(`
                 SELECT u.username, ug.role 
                 FROM "UserGroups" ug
                 JOIN "Users" u ON u.id = ug.user_id
                 WHERE ug.group_id = ${groupId};            
-            `))[0].map(user => new GroupMember(user.username, user.role));
+            `))[0].map(user => {
+                if(!group.group_name && user.username != sessionUser.username && ChatController.isUserOnline(user.username)){
+                        groupInfo.isOnline = true;
+                }
+                return new GroupMember(user.username, user.role)
+            });
+                
         return groupInfo;
     }
 
     static async getGroupInfo(req, res, next){
         const groupId = req.query.groupId;
         try {
-            const groupInfo = await GroupsController.getGroupInfoFromDB(groupId);
+            const groupInfo = await GroupsController.getGroupInfoFromDB(groupId, req.session.user);
             return res.json({ error: undefined, content: groupInfo });
         } catch (err) {
             const error = new CustomError('DatabaseError', "There was a problem fetching group's info. You should panic!");
@@ -64,7 +74,7 @@ class GroupsController {
                 where: {id: groupId}
             });
 
-            const updatedGroup = await GroupsController.getGroupInfoFromDB(groupId);
+            const updatedGroup = await GroupsController.getGroupInfoFromDB(groupId, req.session.user);
             return res.json({ error: undefined, content: updatedGroup });
 
         } catch (err) {

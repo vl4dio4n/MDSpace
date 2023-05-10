@@ -6,13 +6,15 @@ class GroupInfo {
     description;
     type;
     members;
+    isOnline;
 
-    constructor(groupId, groupName, description, type, members){
+    constructor(groupId, groupName, description, type, members, isOnline){
         this.groupId = groupId;
         this.groupName = groupName;
         this.description = description;
         this.type = type;
         this.members = members;
+        this.isOnline = isOnline
     }
 
     get groupId(){
@@ -68,6 +70,17 @@ class GroupInfo {
      */
     set members(newMembers){
         this._members = newMembers;
+    }
+
+    get isOnline(){
+        return this._isOnline;
+    }
+
+    /**
+     * @param {boolean} newIsOnline
+     */
+    set isOnline(newIsOnline){
+        this._isOnline = newIsOnline;
     }
 }
 

@@ -17,6 +17,7 @@ const { LastActivity } = require('./models/LastActivity');
 const { authRoutes } = require('./routes/AuthenticationRoutes');
 const { usersRoutes } = require('./routes/UsersRoutes');
 const { groupsRoutes } = require('./routes/GroupsRoutes');
+const { ChatController } = require("./controllers/ChatController");
 
 sequelize.sync();
 
@@ -56,6 +57,8 @@ app.use(cors({
     credentials: true
 }));
 
+ChatController.init(io);
+ChatController.run();
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -65,10 +68,11 @@ app.use(usersRoutes);
 app.use(groupsRoutes);
 
 
-io.on('connection', socket => {
-    console.log('New WS Connection...');
-    socket.emit('message', 'Welcome to allFriends!');
-});
+
+// io.on('connection', socket => {
+//     console.log('New WS Connection...');
+//     socket.emit('message', 'Welcome to allFriends!');
+// });
 
 
 // app.get("/", (req, res) => {

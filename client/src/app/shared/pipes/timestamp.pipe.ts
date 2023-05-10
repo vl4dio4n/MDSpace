@@ -10,7 +10,7 @@ export class TimestampPipe implements PipeTransform {
     const currentDate = new Date();
 
     if(date.getFullYear() === currentDate.getFullYear() && date.getMonth() === currentDate.getMonth() && date.getDate() === currentDate.getDate() && type == 'contacts-list')
-      return `${date.getHours()}:${date.getMinutes()}`;
+      return `${date.getHours() < 10 ? '0' : ''}${date.getHours()}:${date.getMinutes() < 10 ? '0' : ''}${date.getMinutes()}`;;
     if(date.getFullYear() === currentDate.getFullYear() && date.getMonth() === currentDate.getMonth() && date.getDate() === currentDate.getDate() && type == 'chat-box')
       return `TODAY`;
     currentDate.setDate(currentDate.getDate() - 1);
