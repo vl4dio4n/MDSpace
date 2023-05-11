@@ -2,7 +2,9 @@ const { SocketEventsEnum } = require("../utils/SocketEventsEnum");
 const { sequelize } = require('../db');
 const { Message } = require("../models/Message");
 const { User } = require("../models/User");
+const { LastActivity } = require("../models/LastActivity");
 const { ContactMessage } = require("../utils/ContactMessage");
+const { CustomError } = require('../utils/Error');
 
 
 class ChatController {
@@ -10,6 +12,7 @@ class ChatController {
     static activeSockets = new Map();
     static activeUsers = new Map();
     static usersRooms = new Map();
+    static usersThreads = new Map();
 
     static init(io){
         ChatController.io = io;
@@ -29,11 +32,39 @@ class ChatController {
         }
     }
 
+    static async updateLastActivity(username, newThreadId){
+        const oldThreadId = ChatController.usersThreads.get(username);
+        if(oldThreadId) {
+            try {
+                
+                const userId = (await User.findOne({where: {username: username}})).id;
+                const updateRes = await LastActivity.update(
+                    { timestamp: new Date() },
+                    { where: { user_id: userId, thread_id: oldThreadId } }
+                );
+
+                if(!updateRes[0]) {
+                    const lastActivity = new LastActivity({ user_id: userId, thread_id: oldThreadId, timestamp: new Date() });
+                    await lastActivity.save();
+                }
+    
+            } catch (err) {
+                const error = new CustomError('DatabaseError', 'There was a problem updating the last activity. You should panic!');
+                console.log(error);
+            }
+        }
+
+        if(newThreadId && newThreadId != 'null'){
+            ChatController.usersThreads.set(username, newThreadId);
+        }
+    }
+
     static signInListener(socket){
         socket.on(SocketEventsEnum.SignIn, async (username) => {
             if(!ChatController.activeUsers.has(username)){
                 ChatController.activeUsers.set(username, socket.id);
                 ChatController.activeSockets.set(socket.id, username);
+                ChatController.usersThreads.set(username, null);
             }
 
             const groups = (await sequelize.query(`
@@ -89,10 +120,12 @@ class ChatController {
 
 
     static disconnectListener(socket, eventName){
-        socket.on(eventName, () => {
+        socket.on(eventName, async () => {
             const username = ChatController.activeSockets.get(socket.id);
+            await ChatController.updateLastActivity(username);
             ChatController.activeUsers.delete(username);
             ChatController.activeSockets.delete(socket.id);
+            ChatController.usersThreads.delete(username);
             ChatController.leaveRooms(socket, username);
         });
     }

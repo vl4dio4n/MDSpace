@@ -16,7 +16,7 @@
                 </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-list calss="thread-list">
-                <mat-list-item class="thread-list-item" *ngFor="let thread of group.threads" (click)="selectThread(thread.threadId, thread.threadName, group.groupId, group.groupName)">
+                <mat-list-item class="thread-list-item" *ngFor="let thread of group.threads" (click)="selectThread(thread.threadId, thread.threadName, thread.unseenMessages, group.groupId, group.groupName)">
                     <div matListItemTitle class="thread-list-item-title">
                         <span>#{{ thread.threadName }}</span>
                         <span class="badge-container" *ngIf="thread.unseenMessages > 0"><span class="badge">{{ thread.unseenMessages }}</span></span>

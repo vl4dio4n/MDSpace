@@ -19,12 +19,14 @@ import { IUserTyping } from 'src/app/shared/interfaces/user-typing-interface';
 export class ChatBoxComponent implements OnChanges, OnInit, OnDestroy{
   @Input() threadId: number | undefined;
   @Input() groupId: number | undefined;
+  @Input() unseenMessages: number | undefined;
   @Output() selectedUsername = new EventEmitter<string>();   
   messages: IMessage[] = [];
   sessionUser: IUser;
   messageControl = new FormControl('');
 
   @ViewChild('messagesContainer') messagesContainerRef?: ElementRef;
+  @ViewChild('bookmark') bookmarkRef?: ElementRef;
 
   private messageSubscription?: Subscription;
 
@@ -49,14 +51,20 @@ export class ChatBoxComponent implements OnChanges, OnInit, OnDestroy{
       })
   }
 
+  scrollToBottom(){
+    if(this.messagesContainerRef){
+      const element = this.messagesContainerRef.nativeElement;
+      element.scrollTop = element.scrollHeight; 
+    }
+  }
+
   ngOnInit(): void {
     this.messageSubscription = this.homeComponent.messageSubject.subscribe((newMessage: IMessage) => {
-      this.messages.push(newMessage);
-      if(newMessage.senderUsername == this.authenticationService.sessionUser?.username){
-        setTimeout(() => {
-          const element = this.messagesContainerRef?.nativeElement;
-          element.scrollTop = element.scrollHeight; 
-        }, 100);
+      if(newMessage.threadId == this.threadId){
+        this.messages.push(newMessage);
+        if(newMessage.senderUsername == this.authenticationService.sessionUser?.username){
+          setTimeout(this.scrollToBottom.bind(this), 100);
+        }
       }
     })
   }
@@ -75,6 +83,8 @@ export class ChatBoxComponent implements OnChanges, OnInit, OnDestroy{
         };
         this.chatService.userTyping(userTyping);
       }
+
+      setTimeout(this.scrollToBottom.bind(this), 100);      
     });
   }
 

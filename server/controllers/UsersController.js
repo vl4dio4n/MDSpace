@@ -12,6 +12,7 @@ const { ContactMessage } = require('../utils/ContactMessage');
 const { UserProfile } = require('../utils/UserProfile');
 const { globals } = require('../global-variables');
 const { ChatController } = require('./ChatController');
+const { LastActivity } = require('../models/LastActivity');
 
 
 class UsersController {
@@ -87,12 +88,21 @@ class UsersController {
                         thread.lastMessage = new ContactMessage(message[0].message_id, thread.threadId, group.groupId, message[0].sender_id, message[0].username, message[0].content, message[0].timestamp, message[0].type);
                     }
 
-                    thread.unseenMessages = parseInt((await sequelize.query(`
-                        SELECT COUNT(*) 
-                        FROM "Messages"
-                        JOIN "LastActivities" ON "LastActivities".thread_id = "Messages".thread_id
-                        WHERE "LastActivities".timestamp < now() AND "Messages".thread_id = ${thread.threadId}; 
-                    `))[0][0].count);
+                    const lastActivity = await LastActivity.findOne({where: {user_id: sessionUserId, thread_id: thread.threadId}});
+                    if(lastActivity){
+                        thread.unseenMessages = parseInt((await sequelize.query(`
+                            SELECT COUNT(*) 
+                            FROM "Messages"
+                            JOIN "LastActivities" ON "LastActivities".thread_id = "Messages".thread_id
+                            WHERE "LastActivities".timestamp < "Messages".timestamp AND "Messages".thread_id = ${thread.threadId} AND "LastActivities".user_id = ${sessionUserId}; 
+                        `))[0][0].count);
+                    } else {
+                        thread.unseenMessages = parseInt((await sequelize.query(`
+                            SELECT COUNT(*)
+                            FROM "Messages" m
+                            WHERE m.thread_id = ${thread.threadId};
+                        `))[0][0].count);
+                    }
 
                     unseenMessages += thread.unseenMessages;
                 }

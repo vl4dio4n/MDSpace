@@ -13,6 +13,7 @@ const { ChatController } = require('./ChatController');
 class GroupsController {
     static async getMessages(req, res, next){
         const threadId = req.query.threadId;
+        ChatController.updateLastActivity(req.session.user.username, threadId);
         try {
             const groupId =  (await Thread.findOne({where: { thread_id: threadId }})).group_id;
             

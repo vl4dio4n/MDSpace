@@ -5,6 +5,11 @@
             <div *ngIf="isFirst || dateChanged(i)" style="width: 100%;" class="date-section-container">
                 <div class="date-section">{{message.timestamp | timestamp : 'chat-box'}}</div>
             </div>
+            <div #bookmark>
+                <div *ngIf="i == messages.length - unseenMessages!" style="width: 100%;" class="unseen-messages-container">
+                    <div class="unseen-messages-section">{{unseenMessages}} Unread Messages</div>
+                </div>
+            </div>
             <div class="message-container-inner" [ngClass]="{
                 'align-left': message.senderUsername != sessionUser.username,
                 'align-right': message.senderUsername == sessionUser.username

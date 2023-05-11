@@ -98,7 +98,7 @@
                     </mat-card-header>
                     <mat-card-content class="chat-box-card-content">
                         <mat-divider *ngIf="selectedThread?.threadId"></mat-divider>
-                        <app-chat-box [threadId]="selectedThread?.threadId" [groupId]="selectedGroup?.groupId" (selectedUsername)="showUserProfile($event)"></app-chat-box>
+                        <app-chat-box [threadId]="selectedThread?.threadId" [groupId]="selectedGroup?.groupId" [unseenMessages]="selectedThread?.unseenMessages" (selectedUsername)="showUserProfile($event)"></app-chat-box>
                     </mat-card-content>
                 </mat-card>        
             </mat-grid-tile>

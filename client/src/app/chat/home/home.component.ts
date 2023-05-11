@@ -59,9 +59,7 @@ export class HomeComponent implements OnChanges, OnDestroy {
       this.chatService.connect(this.sessionUser.username)
     
       this.newMessageSubscription = this.chatService.newMessageListener().subscribe((newMessage: IMessage) => {
-        if(newMessage.threadId == this.selectedThread?.threadId){
-          this.messageSubject.next(newMessage);
-        }
+        this.messageSubject.next(newMessage);
       });
       
       this.userStatusSubscription = this.chatService.userStatusListener().subscribe((userStatus: IUserStatus) => {
