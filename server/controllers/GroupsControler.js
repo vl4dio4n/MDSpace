@@ -13,7 +13,7 @@ const { ChatController } = require('./ChatController');
 class GroupsController {
     static async getMessages(req, res, next){
         const threadId = req.query.threadId;
-        ChatController.updateLastActivity(req.session.user.username, threadId);
+        await ChatController.updateLastActivity(req.session.user.username, threadId);
         try {
             const groupId =  (await Thread.findOne({where: { thread_id: threadId }})).group_id;
             
@@ -47,7 +47,6 @@ class GroupsController {
                 }
                 return new GroupMember(user.username, user.role)
             });
-                
         return groupInfo;
     }
 
@@ -125,8 +124,6 @@ class GroupsController {
     }
 
     static async kickGroupMember(req, res, next){
-        // don't forget to close the channel  
-
         try {
             const username = req.body.username;
             const groupId = req.body.groupId;
@@ -134,6 +131,9 @@ class GroupsController {
             const userId = (await User.findOne({where: {username: username}})).id;
 
             await UserGroup.destroy({where: {user_id: userId, group_id: groupId}});
+            ChatController.leaveRoom(username, groupId);
+            ChatController.leaveRoomEmitter(username);
+
             return res.json({ error: undefined, content: true });
         } catch (err) {
             const error = new CustomError('DatabaseError', "There was a problem kicking the user. You should panic!");
@@ -163,10 +163,64 @@ class GroupsController {
             
             let thread = new Thread({thread_name: 'general', group_id: group.id});
             await thread.save();
+            ChatController.addGroupMembers(group.id, members);
 
             return res.json({error: undefined, content: true});
         } catch (err) {
             const error = new CustomError('DatabaseError', "There was a problem creating the group. You should panic!");
+            return res.json({error, content: undefined});
+        }
+    }
+
+    static async startChat(req, res, next){
+        try {
+            const username1 = req.session.user.username; 
+            const username2 = req.body.username;
+
+            if(username1 == username2)
+                throw null;
+
+            const userId1 = (await User.findOne({where: {username: username1}})).id;
+            const userId2 = (await User.findOne({where: {username: username2}})).id;
+
+            const userGroup = (await sequelize.query(`
+                SELECT g.id
+                FROM "Groups" g
+                WHERE (SELECT COUNT(*) FROM "UserGroups" ug WHERE ug.user_id = ${userId1} AND ug.group_id = g.id AND ug.role = 'member') > 0 AND
+                    (SELECT COUNT(*) FROM "UserGroups" ug WHERE ug.user_id = ${userId2} AND ug.group_id = g.id AND ug.role = 'member') > 0 AND
+                    (SELECT COUNT(*) FROM "UserGroups" ug WHERE ug.group_id = g.id) = 2;
+            `));
+
+            if(userGroup[0].length > 0) {
+                const groupId = userGroup[0][0].id
+                const threadId = (await Thread.findOne({where: {group_id: groupId, thread_name: 'general'}})).thread_id;
+                const startChat = {
+                    threadId: threadId,
+                    groupId: groupId
+                }
+
+                return res.json({ error: undefined, content: startChat });
+            } else {
+                let group = new Group();
+                await group.save();
+
+                await GroupsController.addUserGroup(group.id, username1, 'member');
+                await GroupsController.addUserGroup(group.id, username2, 'member');
+                
+                let thread = new Thread({thread_name: 'general', group_id: group.id});
+                await thread.save();
+                ChatController.addGroupMembers(group.id, [username1, username2]);
+                
+                const startChat = {
+                    threadId: thread.thread_id,
+                    groupId: group.id
+                }
+
+                return res.json({ error: undefined, content: startChat });
+            }
+
+        } catch (err) {
+            const error = new CustomError('DatabaseError', "There was a problem starting the chat. You should panic!");
             return res.json({error, content: undefined});
         }
     }
@@ -194,6 +248,7 @@ class GroupsController {
 
             let thread = new Thread({thread_name: threadName, group_id: groupId});
             await thread.save();
+            ChatController.addThread(groupId);
 
             return res.json({error: undefined, content: true});
         } catch (err) {
@@ -208,6 +263,8 @@ class GroupsController {
             const userId = (await User.findOne({where: {username: req.session.user.username}})).id;
 
             await UserGroup.destroy({where: {user_id: userId, group_id: groupId}});
+            ChatController.leaveRoom(req.session.user.username, groupId);
+
             return res.json({ error: undefined, content: true });
         } catch (err) {
             const error = new CustomError('DatabaseError', "There was a problem leaving the group. You should panic!");

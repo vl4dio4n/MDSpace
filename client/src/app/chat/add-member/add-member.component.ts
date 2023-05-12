@@ -20,9 +20,9 @@ export class AddMemberComponent implements OnInit {
 
   ngOnInit(): void {
     this.chatService.getGroupInfo(this.groupId).subscribe((response: IResponse<IGroupInfo>) => {
-      if(response.content){
+      if(response.content) {
         this.members = response.content.members.map((memeber: IGroupMember) => memeber.username);
-      }
+      } 
     })
   }
 
@@ -30,10 +30,13 @@ export class AddMemberComponent implements OnInit {
     this.newMembers = newMembers;
   }
 
-  onAdd(){
+  onAdd() {
     this.chatService.addUsers([this.groupId.toString(), ...this.newMembers]).subscribe((response: IResponse<boolean>) => {
-      if(response.content)
+      if(response.content){
         this.usersAdded.emit(true);
-    })
+        this.chatService.addGroupMembers(this.groupId, this.newMembers);
+      }
+    });
+
   }
 }

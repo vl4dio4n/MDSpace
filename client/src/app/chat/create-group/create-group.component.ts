@@ -35,7 +35,6 @@ export class CreateGroupComponent {
 
   getMembers(members: string[]){
     this.members = members;
-    console.log(this.members);
   }
 
   onSubmit(){
@@ -51,6 +50,7 @@ export class CreateGroupComponent {
         this.groupCreated.emit(true);
       }
     })
+
   }
   
 }

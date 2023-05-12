@@ -14,6 +14,7 @@ import { AddMemberListComponent } from './add-member-list/add-member-list.compon
 import { AddMemberComponent } from './add-member/add-member.component';
 import { CreateThreadComponent } from './create-thread/create-thread.component';
 import { FormsModule } from '@angular/forms';
+import { StartChatComponent } from './start-chat/start-chat.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { FormsModule } from '@angular/forms';
     CreateGroupComponent,
     AddMemberListComponent,
     AddMemberComponent,
-    CreateThreadComponent
+    CreateThreadComponent,
+    StartChatComponent
   ],
   imports: [
     CommonModule,

@@ -14,5 +14,6 @@ groupsRoutes.post('/create-group', AuthenticationController.isAuthenticated, Gro
 groupsRoutes.post('/add-users', AuthenticationController.isAuthenticated, GroupsController.addUsers);
 groupsRoutes.post('/create-thread', AuthenticationController.isAuthenticated, GroupsController.createThread);
 groupsRoutes.post('/leave-group', AuthenticationController.isAuthenticated, GroupsController.leaveGroup);
+groupsRoutes.post('/start-chat', AuthenticationController.isAuthenticated, GroupsController.startChat);
 
 module.exports = { groupsRoutes };

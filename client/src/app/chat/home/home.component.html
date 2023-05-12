@@ -50,9 +50,9 @@
                     </mat-card-header>
                     <mat-card-content>
                         <mat-divider></mat-divider>
-                        <app-search-user (hasInput)="hasInput($event)"></app-search-user>
+                        <app-search-user (hasInput)="hasInput($event)" (userSelected)="selectUserFromSearch($event)" [clearSearch]="clearSearch"></app-search-user>
                         <mat-divider></mat-divider>
-                        <app-contacts-list (selectedThread)="selectThread($event)" (selectedGroup)="selectGroup($event)" [updated]="contactsUpdated" *ngIf="!searchBarHasInput"></app-contacts-list>
+                        <app-contacts-list (selectedThread)="selectThread($event)" (selectedGroup)="selectGroup($event)" [startChat]="startChat" [updated]="contactsUpdated" *ngIf="!searchBarHasInput"></app-contacts-list>
                     </mat-card-content>
                 </mat-card>
             </mat-grid-tile>

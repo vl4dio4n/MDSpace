@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { debounceTime } from 'rxjs';
 import { IResponse } from 'src/app/shared/interfaces/response-interfacce';
@@ -10,13 +10,14 @@ import { SearchService } from 'src/app/shared/services/search.service';
   templateUrl: './search-user.component.html',
   styleUrls: ['./search-user.component.scss']
 })
-export class SearchUserComponent {
+export class SearchUserComponent implements OnChanges{
   searchControl = new FormControl('');
   searchResults: ISearchUser[] = [];
   message = "";
   @Output() hasInput = new EventEmitter<boolean>();
   @Output() userSelected = new EventEmitter<string>();
   @Input() maxHeight = 570;
+  @Input() clearSearch = false;
 
   constructor(private searchService: SearchService){
     this.searchControl.valueChanges.pipe(debounceTime(500)).subscribe(value => {
@@ -38,6 +39,12 @@ export class SearchUserComponent {
         this.message = "";
       }
     })
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if(changes['clearSearch']?.previousValue != changes['clearSearch']?.currentValue){
+      this.searchControl.reset();
+    }
   }
 
   onUserSelected(username: string) {

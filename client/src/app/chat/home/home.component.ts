@@ -18,6 +18,8 @@ import { IMessage } from 'src/app/shared/interfaces/message-interface';
 import { Subject, Subscription } from 'rxjs';
 import { IUserStatus } from 'src/app/shared/interfaces/user-status-interface';
 import { IUserTyping } from 'src/app/shared/interfaces/user-typing-interface';
+import { StartChatComponent } from '../start-chat/start-chat.component';
+import { IStartChat } from 'src/app/shared/interfaces/start-chat-interface';
 
 @Component({
   selector: 'app-home',
@@ -31,6 +33,9 @@ export class HomeComponent implements OnChanges, OnDestroy {
   selectedThread: IShortThreadInfo | undefined;
   selectedGroup: IShortGroupInfo | undefined;
   groupInfo?: IGroupInfo;
+
+  startChat?: IStartChat;
+  clearSearch: boolean = false;
 
   @ViewChild(MatSidenav)
   sidenav!: MatSidenav;
@@ -72,7 +77,7 @@ export class HomeComponent implements OnChanges, OnDestroy {
         if(this.selectedThread && this.selectedThread.threadId == userTyping.threadId){
           this.userTyping = userTyping; 
         }
-      })
+      });
   }
 
   ngOnChanges(): void {
@@ -101,6 +106,7 @@ export class HomeComponent implements OnChanges, OnDestroy {
 
   selectThread(selectedThread: IShortThreadInfo){
     this.selectedThread = selectedThread;
+    this.userTyping = undefined;
   }
 
   async selectGroup(selectedGroup: IShortGroupInfo): Promise<void>{
@@ -202,11 +208,31 @@ export class HomeComponent implements OnChanges, OnDestroy {
           groupId: this.selectedGroup!.groupId
         };
         this.chatService.createThread(newThread).subscribe((response: IResponse<boolean>) => {
-          if(response.content)
+          if(response.content){
             this.contactsUpdated = !this.contactsUpdated;
+            this.chatService.threadCreated(this.selectedGroup!.groupId);
+          }
         })
       }
     })
+  }
+
+  // (selectedThread)="selectThread($event)" (selectedGroup)="selectGroup($event)" [updated]="contactsUpdated
+  selectUserFromSearch(username: string): void {
+    const dialogRef = this.dialog.open(StartChatComponent, {
+      data: {username: username}
+    });
+
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if(result){
+        this.chatService.startChat(username).subscribe(async (response: IResponse<IStartChat>) => {
+          if(response.content){
+            this.startChat = response.content;
+            this.clearSearch = !this.clearSearch;
+          }
+        });
+      }
+    });
   }
 
   onGroupLeave(): void {
@@ -228,4 +254,5 @@ export class HomeComponent implements OnChanges, OnDestroy {
     this.userStatusSubscription.unsubscribe();
     this.userTypingSubscription.unsubscribe();
   }
+
 }

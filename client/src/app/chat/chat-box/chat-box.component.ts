@@ -111,6 +111,7 @@ export class ChatBoxComponent implements OnChanges, OnInit, OnDestroy{
       } 
       this.chatService.sendMessage(newMessage);
       this.messageControl.reset('');
+      this.unseenMessages = 0; 
     }
   }
 

@@ -25,11 +25,31 @@ class ChatController {
     static leaveRooms(socket, username){
         if(ChatController.usersRooms.has(username)){
             socket.to(Array.from(ChatController.usersRooms.get(username))).emit(SocketEventsEnum.UserStatus, {username: username, status: false})
-            ChatController.usersRooms.forEach(room => {
+            ChatController.usersRooms.get(username).forEach(room => {
                 socket.leave(room);
             });
             ChatController.usersRooms.delete(username);
         }
+    }
+
+    static leaveRoom(username, room){
+        const socketId = ChatController.activeUsers.get(username);
+        const socket = ChatController.io.sockets.sockets.get(socketId);
+        socket.leave(room);
+        ChatController.usersRooms.get(username).delete(room);
+    }
+
+    static leaveRoomEmitter(username){
+        const socketId = ChatController.activeUsers.get(username);
+        const socket = ChatController.io.sockets.sockets.get(socketId);
+        socket.emit(SocketEventsEnum.LeaveGroup);
+    }
+
+    static joinRoom(socket, username, groupId){
+        socket.join(groupId);
+        if(!ChatController.usersRooms.has(username))
+            ChatController.usersRooms.set(username, new Set());
+        ChatController.usersRooms.get(username).add(groupId);
     }
 
     static async updateLastActivity(username, newThreadId){
@@ -72,15 +92,12 @@ class ChatController {
                 FROM "UserGroups" ug
                 JOIN "Users" u ON u.id = ug.user_id
                 WHERE u.username = '${username}';
-            `))[0].map(group => {
-                socket.join(group.group_id);
-                if(!ChatController.usersRooms.has(username))
-                    ChatController.usersRooms.set(username, new Set());
-                ChatController.usersRooms.get(username).add(group.group_id);
-            })
+            `))[0].map(group => ChatController.joinRoom(socket, username, group.group_id));
 
             if(ChatController.usersRooms.has(username))
                 socket.to(Array.from(ChatController.usersRooms.get(username))).emit(SocketEventsEnum.UserStatus, {username: username, status: true})
+        
+            console.log(ChatController.activeUsers);    
         });
     }
 
@@ -118,6 +135,29 @@ class ChatController {
         })
     } 
 
+    static addThread(groupId){
+        ChatController.io.to(groupId).emit(SocketEventsEnum.ThreadCreated);
+    }
+
+    static addGroupMembers(groupId, members){
+
+        members.forEach((member) => {
+            const socketId = ChatController.activeUsers.get(member);
+            if(socketId){
+                const socket = ChatController.io.sockets.sockets.get(socketId);
+                ChatController.joinRoom(socket, member, groupId);
+                socket.emit(SocketEventsEnum.UserAddedToGroup);
+            }
+        })
+    }
+
+    static addGroupMembersListener(socket) {
+        socket.on(SocketEventsEnum.AddGroupMembers, (groupId, members) => {
+            ChatController.addGroupMembers(groupId, members);
+        })
+    }
+
+    
 
     static disconnectListener(socket, eventName){
         socket.on(eventName, async () => {
@@ -136,6 +176,7 @@ class ChatController {
           ChatController.newMessageListener(socket);
           ChatController.userTypingListener(socket);
           ChatController.disconnectListener(socket, SocketEventsEnum.SignOut);
+          ChatController.addGroupMembersListener(socket);
           ChatController.disconnectListener(socket, 'disconnect');              
         })
     }

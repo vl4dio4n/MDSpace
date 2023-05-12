@@ -14,6 +14,7 @@ import { SocketEventsEnum } from '../enums/socket-events-enum';
 import { INewMessage } from '../interfaces/new-message-interface';
 import { IUserStatus } from '../interfaces/user-status-interface';
 import { IUserTyping } from '../interfaces/user-typing-interface';
+import { IStartChat } from '../interfaces/start-chat-interface';
 
 @Injectable({
   providedIn: 'root'
@@ -63,6 +64,10 @@ export class ChatService {
     return this.http.post<IResponse<boolean>>('/api/leave-group', {groupId: data});
   }
 
+  startChat(username: string): Observable<IResponse<IStartChat>> {
+    return this.http.post<IResponse<IStartChat>>('/api/start-chat', {username: username});
+  }
+
   /********************************************** Socket ********************************************/
 
   connect(username: string): void{
@@ -91,5 +96,25 @@ export class ChatService {
 
   userTypingListener(): Observable<IUserTyping> {
     return this.socket.fromEvent<IUserTyping>(SocketEventsEnum.UserTyping)
+  }
+  
+  addGroupMembers(groupId: number, members: string[]): void {
+    this.socket.emit(SocketEventsEnum.AddGroupMembers, groupId, members);
+  } 
+
+  userAddedToGroupListener(): Observable<void> {
+    return this.socket.fromEvent<void>(SocketEventsEnum.UserAddedToGroup);
+  }
+
+  threadCreated(groupId: number): void {
+    this.socket.emit(SocketEventsEnum.ThreadCreated, groupId);
+  }
+
+  threadCreatedListener(): Observable<void> {
+    return this.socket.fromEvent<void>(SocketEventsEnum.ThreadCreated);
+  }
+
+  leaveGroupListener(): Observable<void> {
+    return this.socket.fromEvent<void>(SocketEventsEnum.LeaveGroup);
   }
 }
