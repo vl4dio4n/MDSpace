@@ -20,6 +20,8 @@ import { IUserStatus } from 'src/app/shared/interfaces/user-status-interface';
 import { IUserTyping } from 'src/app/shared/interfaces/user-typing-interface';
 import { StartChatComponent } from '../start-chat/start-chat.component';
 import { IStartChat } from 'src/app/shared/interfaces/start-chat-interface';
+import { INewMessage } from 'src/app/shared/interfaces/new-message-interface';
+import { MessageTypeEnum } from 'src/app/shared/enums/message-type-enum';
 
 @Component({
   selector: 'app-home',
@@ -217,7 +219,6 @@ export class HomeComponent implements OnChanges, OnDestroy {
     })
   }
 
-  // (selectedThread)="selectThread($event)" (selectedGroup)="selectGroup($event)" [updated]="contactsUpdated
   selectUserFromSearch(username: string): void {
     const dialogRef = this.dialog.open(StartChatComponent, {
       data: {username: username}
@@ -255,4 +256,36 @@ export class HomeComponent implements OnChanges, OnDestroy {
     this.userTypingSubscription.unsubscribe();
   }
 
+
+  /**************************************** Video Call Logic **********************************************/
+
+  private generateRoomId(length: number): string {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let randomString = '';
+
+    for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      randomString += characters.charAt(randomIndex);
+    }
+
+    return randomString;
+  }
+
+  private craftMessage(): INewMessage {
+    const message: INewMessage = {
+      threadId: this.selectedThread!.threadId,
+      groupId: this.selectedGroup!.groupId,
+      content: this.generateRoomId(10),
+      timestamp: new Date(),
+      type: MessageTypeEnum.Video
+    }
+    return message;
+  }
+
+  onCreateVideoCall() {
+    const messge = this.craftMessage();
+    this.chatService.sendMessage(messge);
+    this.router.navigate(['/room'], { queryParams: { roomId: messge.content } });
+    this.chatService.updateLastActivity(this.authenticationService.sessionUser!.username).subscribe((response: IResponse<boolean>) => {});
+  }
 }

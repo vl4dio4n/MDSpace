@@ -1,0 +1,81 @@
+#videos{
+    display: grid;
+    grid-template-columns: 1fr;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.video-player{
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: rotateY(180deg);
+    -webkit-transform:rotateY(180deg);
+    -moz-transform:rotateY(180deg);
+}
+
+.small-frame{
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    height: 170px;
+    width: 300px;
+    border-radius: 5px;
+    border: 2px solid rgba(194, 24, 91, 0.589);
+    -webkit-box-shadow: 3px 3px 15px -1px rgba(0, 0, 0, 0.77);
+    box-shadow: 3px 3px 15px -1px rgba(0, 0, 0, 0.77);
+    z-index: 999;
+}
+
+
+#controls{
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 1em;
+}
+
+#camera-btn,
+#mic-btn,
+#chat-btn {
+    background-color: rgba(194, 24, 91, 0.589);
+}
+
+#leave-btn{
+    background-color: rgb(255, 80, 80, 1);
+}
+
+.sidenav-container{
+    height: 100%;
+    background: linear-gradient(to bottom right, #000000, #94b1c0);
+}
+
+.sidenav-content-container{
+    width: 400px;
+    box-sizing: border-box;
+}
+
+.sidenav{
+    background-color: rgb(66, 66, 66, 0.4);
+    box-sizing: border-box;
+}
+
+.sidenav-action-button{
+    background-color: transparent;
+}
+
+
+@media screen and (max-width: 600px){
+    .small-frame{
+        height: 80px;
+        width: 120px;
+    }
+    .control-container img{
+        height: 20px;
+        width: 20px;
+    }
+
+}

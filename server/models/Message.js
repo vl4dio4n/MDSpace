@@ -46,7 +46,7 @@ Message.init({
         allowNull: false
     },
     type: {
-        type: DataTypes.ENUM("text"),
+        type: DataTypes.ENUM("text", "video"),
         defaultValue: "text"
     }
 }, {

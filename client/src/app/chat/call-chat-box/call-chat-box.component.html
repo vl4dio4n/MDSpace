@@ -1,0 +1,39 @@
+<div class="chat-box-container">
+    <p class="chat-header">Video call started at {{startTime | timestamp : 'call-chat'}}</p>
+    
+    <div class="messages-list" *ngIf="messages.length" #messagesContainer>
+        <div *ngFor="let message of messages; index as i; first as isFirst" class="message-container-outer">
+            <div class="message-container-inner" [ngClass]="{
+                'align-left': message.senderUsername != sessionUser.username,
+                'align-right': message.senderUsername == sessionUser.username
+            }">
+
+                <div *ngIf="message.senderUsername != sessionUser.username" class="message-list-item-container">
+                    <div class="text-container">
+                        <div style="padding-right: 35px;">
+                            <p *ngIf="isFirst || messages[i].senderUsername != messages[i - 1].senderUsername" class="text-element"><span class="username">@{{ message.senderUsername }}</span></p>
+                            <p *ngIf="message.type == messageTypeEnum.Text" class="text-element message-content">{{ message.content }}</p>
+                        </div>
+                        <p class="text-element" class="send-time">{{ message.timestamp | hoursMinutes }} </p>
+                    </div>
+                </div>
+    
+                <div *ngIf="message.senderUsername == sessionUser.username" class="message-list-item-container">
+                    <div class="text-container">
+                        <div style="padding-right: 35px;">
+                            <p *ngIf="isFirst || messages[i].senderUsername != messages[i - 1].senderUsername" class="text-element"><span class="username">@{{ message.senderUsername }}</span></p>
+                            <p *ngIf="message.type == messageTypeEnum.Text" class="text-element message-content">{{ message.content }}</p>
+                        </div>
+                        <p class="text-element" class="send-time">{{ message.timestamp | hoursMinutes }} </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <mat-form-field class="message-field">
+        <input matInput placeholder="Message" [formControl]="messageControl">
+        <button matSuffix mat-button (click)="onSend()"><mat-icon>send</mat-icon></button>
+    </mat-form-field>
+</div>
+

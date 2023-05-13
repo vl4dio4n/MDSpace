@@ -12,6 +12,8 @@ import { AuthenticationService } from 'src/app/shared/services/authentication.se
 import { ChatService } from 'src/app/shared/services/chat.service';
 import { IStartChat } from 'src/app/shared/interfaces/start-chat-interface';
 import { IThread } from 'src/app/shared/interfaces/thread-interface';
+import { MessageTypeEnum } from 'src/app/shared/enums/message-type-enum';
+import { IAccordion } from 'src/app/shared/interfaces/accordion-interface';
 
 @Component({
   selector: 'app-contacts-list',
@@ -24,8 +26,10 @@ export class ContactsListComponent implements OnInit, OnChanges, OnDestroy {
   @Input() updated = false;
   @Input() startChat?: IStartChat;
   lastGroupId?: number;
-  contacts: IGroup[] = [];
+  contacts: IAccordion<IGroup>[] = [];
   threadId: number | undefined;
+
+  messageTypeEnum = MessageTypeEnum;
 
   private messageSubscription?: Subscription;
   private groupSubscription?: Subscription;
@@ -42,7 +46,9 @@ export class ContactsListComponent implements OnInit, OnChanges, OnDestroy {
   getContacts() {
     this.searchService.getContacts().subscribe((response: IResponse<IGroup[]>) => {
       if (response.content) {
-        this.contacts = response.content;
+        this.contacts = response.content.map((contact: IGroup) => { 
+          return {expanded: false, data: contact}
+        });
       }
     });
   }
@@ -52,15 +58,15 @@ export class ContactsListComponent implements OnInit, OnChanges, OnDestroy {
 
     this.messageSubscription = this.homeComponent.messageSubject.subscribe((newMessage: IMessage) => {
       if (this.authenticationService.sessionUser?.username != newMessage.senderUsername && this.threadId != newMessage.threadId) {
-        const contact = this.contacts.find(group => group.groupId == newMessage.groupId);
-        contact!.unseenMessages += 1;
+        const contact = this.contacts.find(group => group.data.groupId == newMessage.groupId);
+        contact!.data.unseenMessages += 1;
 
-        const thread = contact!.threads.find(thread => thread.threadId == newMessage.threadId);
+        const thread = contact!.data.threads.find(thread => thread.threadId == newMessage.threadId);
         thread!.unseenMessages += 1;
         thread!.lastMessage = newMessage;
       } else {
-        const contact = this.contacts.find(group => group.groupId == newMessage.groupId);
-        const thread = contact!.threads.find(thread => thread.threadId == newMessage.threadId);
+        const contact = this.contacts.find(group => group.data.groupId == newMessage.groupId);
+        const thread = contact!.data.threads.find(thread => thread.threadId == newMessage.threadId);
         thread!.lastMessage = newMessage;
       }
     });
@@ -73,11 +79,13 @@ export class ContactsListComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     this.searchService.getContacts().subscribe((response: IResponse<IGroup[]>) => {
       if (response.content) {
-        this.contacts = response.content;
+        this.contacts = response.content.map((contact: IGroup) => { 
+          return {expanded: false, data: contact}
+        });
         if (changes['startChat']?.previousValue != changes['startChat']?.currentValue && this.startChat) {
-          const group: IGroup = this.contacts.find((contact: IGroup) => contact.groupId == this.startChat!.groupId)!;
-          const thread: IThread = group.threads.find((thread: IThread) => thread.threadId == this.startChat!.threadId)!;
-          this.selectThread(thread.threadId, thread.threadName, thread.unseenMessages, group.groupId, group.groupName);
+          const group: IAccordion<IGroup> = this.contacts.find((contact: IAccordion<IGroup>) => contact.data.groupId == this.startChat!.groupId)!;
+          const thread: IThread = group.data.threads.find((thread: IThread) => thread.threadId == this.startChat!.threadId)!;
+          this.selectThread(thread.threadId, thread.threadName, thread.unseenMessages, group.data.groupId, group.data.groupName);
         }
       }
     });
@@ -92,10 +100,14 @@ export class ContactsListComponent implements OnInit, OnChanges, OnDestroy {
       this.selectedGroup.emit({ groupId, groupName });
     }
 
-    const contact = this.contacts.find(group => group.groupId == groupId);
-    const thread = contact!.threads.find(thread => thread.threadId == threadId);
-    contact!.unseenMessages -= thread!.unseenMessages;
+    const contact = this.contacts.find(group => group.data.groupId == groupId);
+    const thread = contact!.data.threads.find(thread => thread.threadId == threadId);
+    contact!.data.unseenMessages -= thread!.unseenMessages;
     thread!.unseenMessages = 0;
+  }
+
+  toggleAccordion(group: IAccordion<IGroup>): void {
+    group.expanded = !group.expanded;
   }
 
   ngOnDestroy(): void {

@@ -10,6 +10,8 @@ import { ChatService } from 'src/app/shared/services/chat.service';
 import { HomeComponent } from '../home/home.component';
 import { Subscription, debounceTime } from 'rxjs';
 import { IUserTyping } from 'src/app/shared/interfaces/user-typing-interface';
+import { MessageTypeEnum } from 'src/app/shared/enums/message-type-enum';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat-box',
@@ -28,12 +30,15 @@ export class ChatBoxComponent implements OnChanges, OnInit, OnDestroy{
   @ViewChild('messagesContainer') messagesContainerRef?: ElementRef;
   @ViewChild('bookmark') bookmarkRef?: ElementRef;
 
+  messageTypeEnum = MessageTypeEnum;
+
   private messageSubscription?: Subscription;
 
   constructor(
     private authenticationService: AuthenticationService,
     private chatService: ChatService,
-    private homeComponent: HomeComponent){
+    private homeComponent: HomeComponent,
+    private router: Router){
       this.sessionUser = authenticationService.sessionUser!;
       
       this.messageControl.valueChanges.pipe(debounceTime(20)).subscribe(value => {
@@ -62,6 +67,7 @@ export class ChatBoxComponent implements OnChanges, OnInit, OnDestroy{
     this.messageSubscription = this.homeComponent.messageSubject.subscribe((newMessage: IMessage) => {
       if(newMessage.threadId == this.threadId){
         this.messages.push(newMessage);
+        this.unseenMessages = 0;
         if(newMessage.senderUsername == this.authenticationService.sessionUser?.username){
           setTimeout(this.scrollToBottom.bind(this), 100);
         }
@@ -107,12 +113,17 @@ export class ChatBoxComponent implements OnChanges, OnInit, OnDestroy{
         groupId: this.groupId!,
         content: this.messageControl.value!,
         timestamp: new Date(),
-        type: 'text'
+        type: MessageTypeEnum.Text
       } 
       this.chatService.sendMessage(newMessage);
       this.messageControl.reset('');
       this.unseenMessages = 0; 
     }
+  }
+
+  onJoinRoom(roomId: string) {
+    this.chatService.updateLastActivity(this.authenticationService.sessionUser!.username).subscribe((response: IResponse<boolean>) => {});
+    this.router.navigate(['/room'], { queryParams: { roomId: roomId } });
   }
 
   ngOnDestroy(): void {

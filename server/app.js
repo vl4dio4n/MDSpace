@@ -18,6 +18,7 @@ const { authRoutes } = require('./routes/AuthenticationRoutes');
 const { usersRoutes } = require('./routes/UsersRoutes');
 const { groupsRoutes } = require('./routes/GroupsRoutes');
 const { ChatController } = require("./controllers/ChatController");
+const { chatRoutes } = require("./routes/ChatRoutes");
 
 sequelize.sync();
 
@@ -66,7 +67,7 @@ app.use(express.json());
 app.use(authRoutes);
 app.use(usersRoutes);
 app.use(groupsRoutes);
-
+app.use(chatRoutes);
 
 
 // io.on('connection', socket => {

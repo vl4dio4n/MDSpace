@@ -4,6 +4,7 @@ import { SigninComponent } from './authentication/signin/signin.component';
 import { RegisterComponent } from './authentication/register/register.component';
 import { HomeComponent } from './chat/home/home.component';
 import { AuthenticationGuard } from './shared/guards/authentication.guard';
+import { VideoCallComponent } from './chat/video-call/video-call.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,11 @@ const routes: Routes = [
   {
     path: 'home',
     component: HomeComponent,
+    canActivate: [AuthenticationGuard]
+  },
+  {
+    path: 'room',
+    component: VideoCallComponent,
     canActivate: [AuthenticationGuard]
   }
 ];

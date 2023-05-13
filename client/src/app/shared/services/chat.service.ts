@@ -15,6 +15,7 @@ import { INewMessage } from '../interfaces/new-message-interface';
 import { IUserStatus } from '../interfaces/user-status-interface';
 import { IUserTyping } from '../interfaces/user-typing-interface';
 import { IStartChat } from '../interfaces/start-chat-interface';
+import { ICallMessage } from '../interfaces/call-message-interface';
 
 @Injectable({
   providedIn: 'root'
@@ -68,6 +69,10 @@ export class ChatService {
     return this.http.post<IResponse<IStartChat>>('/api/start-chat', {username: username});
   }
 
+  updateLastActivity(username: string): Observable<IResponse<boolean>> {
+    return this.http.post<IResponse<boolean>>('/api/update-last-activity', {username: username});
+  }
+
   /********************************************** Socket ********************************************/
 
   connect(username: string): void{
@@ -116,5 +121,21 @@ export class ChatService {
 
   leaveGroupListener(): Observable<void> {
     return this.socket.fromEvent<void>(SocketEventsEnum.LeaveGroup);
+  }
+
+  joinCall(username: string, roomId: string): void {
+    this.socket.emit(SocketEventsEnum.JoinCall, username, roomId);
+  }
+
+  leaveCall(username: string): void {
+    this.socket.emit(SocketEventsEnum.LeaveCall, username);
+  }
+
+  sendCallMessage(callMessage: ICallMessage): void {
+    this.socket.emit(SocketEventsEnum.NewCallMessage, callMessage);
+  }
+
+  callMessageListener(): Observable<ICallMessage> {
+    return this.socket.fromEvent<ICallMessage>(SocketEventsEnum.NewCallMessage);
   }
 }

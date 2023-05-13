@@ -1,0 +1,21 @@
+<mat-sidenav-container class="sidenav-container" style="height: 100%;">
+    <mat-sidenav mode="side" position="end" class="sidenav">
+        <button mat-flat-button class="sidenav-action-button" title="Close" (click)="closeSidenav()"><mat-icon>close</mat-icon></button>
+        <div class="sidenav-content-container">
+            <app-call-chat-box [roomId]="roomId"></app-call-chat-box>
+        </div>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <div id="videos">
+            <video class="video-player" id="local-video" autoplay [muted]="'muted'" playsinline [srcObject]="localStream" [class]="remoteUserConnected ? 'small-frame' : null"></video>
+            <video class="video-player" id="remote-video" autoplay playsinline [srcObject]="remoteStream" [style.display]="remoteUserConnected ? 'block' : 'none'"></video>
+        </div>
+        <div id="controls">
+            <button mat-fab id="camera-btn" (click)="toggleCamera()"><mat-icon>videocam</mat-icon></button>
+            <button mat-fab id="mic-btn" (click)="toggleMic()"><mat-icon>mic</mat-icon></button>
+            <button mat-fab id="chat-btn" (click)="toggleSidenav()"><mat-icon>chat</mat-icon></button>
+            <button mat-fab id="leave-btn" (click)="leaveCall()"><mat-icon>phone</mat-icon></button>
+        </div>
+    </mat-sidenav-content>
+</mat-sidenav-container>

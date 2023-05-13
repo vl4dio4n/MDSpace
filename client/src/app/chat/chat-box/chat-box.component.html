@@ -14,13 +14,17 @@
                 'align-left': message.senderUsername != sessionUser.username,
                 'align-right': message.senderUsername == sessionUser.username
             }">
+
                 <div *ngIf="message.senderUsername != sessionUser.username" class="message-list-item-container">
                     <img *ngIf="isFirst || messages[i].senderId != messages[i - 1].senderId" src="assets/images/user.png" class="avatar">
                     <div *ngIf="!isFirst && messages[i].senderId == messages[i - 1].senderId"></div>
                     <div class="text-container">
                         <div style="padding-right: 35px;">
                             <p *ngIf="isFirst || messages[i].senderId != messages[i - 1].senderId" class="text-element"><span class="username" (click)="onUsernameClicked(message.senderUsername)">@{{ message.senderUsername }}</span></p>
-                            <p class="text-element">{{ message.content }}</p>
+                            <p *ngIf="message.type == messageTypeEnum.Text" class="text-element message-content">{{ message.content }}</p>
+                            <div *ngIf="message.type == messageTypeEnum.Video" class="video-call-message">
+                                <button mat-raised-button color="accent" (click)="onJoinRoom(message.content)"><span>Join</span>&nbsp;<mat-icon>videocam</mat-icon></button>
+                            </div>
                         </div>
                         <p class="text-element" class="send-time">{{ message.timestamp | hoursMinutes }} </p>
                     </div>
@@ -30,7 +34,10 @@
                     <div class="text-container">
                         <div style="padding-right: 35px;">
                             <p *ngIf="isFirst || messages[i].senderId != messages[i - 1].senderId" class="text-element"><span class="username" (click)="onUsernameClicked(message.senderUsername)">@{{ message.senderUsername }}</span></p>
-                            <p class="text-element">{{ message.content }}</p>
+                            <p *ngIf="message.type == messageTypeEnum.Text" class="text-element message-content">{{ message.content }}</p>
+                            <div *ngIf="message.type == messageTypeEnum.Video" class="video-call-message">
+                                <button mat-raised-button color="accent" (click)="onJoinRoom(message.content)"><span>Join</span>&nbsp;<mat-icon>videocam</mat-icon></button>
+                            </div>
                         </div>
                         <p class="text-element" class="send-time">{{ message.timestamp | hoursMinutes }} </p>
                     </div>

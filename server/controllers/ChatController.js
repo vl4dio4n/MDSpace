@@ -13,6 +13,7 @@ class ChatController {
     static activeUsers = new Map();
     static usersRooms = new Map();
     static usersThreads = new Map();
+    static usersCalls = new Map();
 
     static init(io){
         ChatController.io = io;
@@ -20,6 +21,13 @@ class ChatController {
 
     static isUserOnline(username){
         return ChatController.activeUsers.has(username);
+    }
+
+    static leaveCall(socket, username){
+        if(ChatController.usersCalls.has(username)){
+            socket.leave(ChatController.usersRooms.get(username));
+            ChatController.usersCalls.delete(username);
+        }
     }
 
     static leaveRooms(socket, username){
@@ -30,6 +38,7 @@ class ChatController {
             });
             ChatController.usersRooms.delete(username);
         }
+        ChatController.leaveCall(socket, username);
     }
 
     static leaveRoom(username, room){
@@ -74,9 +83,15 @@ class ChatController {
             }
         }
 
-        if(newThreadId && newThreadId != 'null'){
+        if(newThreadId != 'null'){
             ChatController.usersThreads.set(username, newThreadId);
         }
+    }
+
+    static async updateLastActivityEnd(req, res, next) {
+        const username = req.body.username;
+        await ChatController.updateLastActivity(username);
+        return res.json({ error: undefined, content: true });
     }
 
     static signInListener(socket){
@@ -84,7 +99,7 @@ class ChatController {
             if(!ChatController.activeUsers.has(username)){
                 ChatController.activeUsers.set(username, socket.id);
                 ChatController.activeSockets.set(socket.id, username);
-                ChatController.usersThreads.set(username, null);
+                ChatController.usersThreads.set(username, undefined);
             }
 
             const groups = (await sequelize.query(`
@@ -129,6 +144,13 @@ class ChatController {
         })
     }
 
+    static callMessageListener(socket) {
+        socket.on(SocketEventsEnum.NewCallMessage, async (newMessage) => {
+            console.log(newMessage);
+            ChatController.io.to(newMessage.roomId).emit(SocketEventsEnum.NewCallMessage, newMessage);
+        })
+    }
+
     static userTypingListener(socket) {
         socket.on(SocketEventsEnum.UserTyping, (userTyping) => {
             socket.to(Array.from(ChatController.usersRooms.get(userTyping.username))).emit(SocketEventsEnum.UserTyping, userTyping);
@@ -157,6 +179,19 @@ class ChatController {
         })
     }
 
+
+    static joinCallListener(socket) {
+        socket.on(SocketEventsEnum.JoinCall, (username, roomId) => {
+            ChatController.usersCalls.set(username, roomId);
+            socket.join(roomId);
+        })
+    }
+
+    static leaveCallListener(socket) {
+        socket.on(SocketEventsEnum.LeaveCall, (username) => {
+            ChatController.leaveCall(socket, username);
+        });
+    }
     
 
     static disconnectListener(socket, eventName){
@@ -177,6 +212,9 @@ class ChatController {
           ChatController.userTypingListener(socket);
           ChatController.disconnectListener(socket, SocketEventsEnum.SignOut);
           ChatController.addGroupMembersListener(socket);
+          ChatController.joinCallListener(socket);
+          ChatController.leaveCallListener(socket);
+          ChatController.callMessageListener(socket);
           ChatController.disconnectListener(socket, 'disconnect');              
         })
     }

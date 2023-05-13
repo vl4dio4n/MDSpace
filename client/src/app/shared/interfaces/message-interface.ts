@@ -1,3 +1,5 @@
+import { MessageTypeEnum } from "../enums/message-type-enum";
+
 export interface IMessage {
     messageId: number;
     groupId: number;
@@ -6,5 +8,5 @@ export interface IMessage {
     senderUsername: string;
     content: string;
     timestamp: Date;
-    type: "text";
+    type: MessageTypeEnum;
 }

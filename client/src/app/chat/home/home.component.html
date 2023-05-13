@@ -71,7 +71,7 @@
                                 <mat-icon>more_vert</mat-icon>
                             </button>
                             <mat-menu #menu="matMenu">
-                                <button mat-menu-item>
+                                <button mat-menu-item (click)="onCreateVideoCall()" *ngIf="this.groupInfo?.type == groupTypeEnum.User">
                                     <mat-icon>videocam</mat-icon>
                                     <span>Video Call</span>
                                 </button>

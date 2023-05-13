@@ -8,7 +8,10 @@ const SocketEventsEnum = {
     AddGroupMembers: 'add-group-members',
     UserAddedToGroup: 'user-added-to-group',
     ThreadCreated: 'thread-created',
-    LeaveGroup: 'leave-group'
+    LeaveGroup: 'leave-group',
+    JoinCall: 'join-call',
+    LeaveCall: 'leave-call',
+    NewCallMessage: 'new-call-message'
 }
 
 module.exports = { SocketEventsEnum }

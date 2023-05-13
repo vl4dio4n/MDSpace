@@ -15,6 +15,8 @@ import { AddMemberComponent } from './add-member/add-member.component';
 import { CreateThreadComponent } from './create-thread/create-thread.component';
 import { FormsModule } from '@angular/forms';
 import { StartChatComponent } from './start-chat/start-chat.component';
+import { VideoCallComponent } from './video-call/video-call.component';
+import { CallChatBoxComponent } from './call-chat-box/call-chat-box.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { StartChatComponent } from './start-chat/start-chat.component';
     AddMemberListComponent,
     AddMemberComponent,
     CreateThreadComponent,
-    StartChatComponent
+    StartChatComponent,
+    VideoCallComponent,
+    CallChatBoxComponent
   ],
   imports: [
     CommonModule,
