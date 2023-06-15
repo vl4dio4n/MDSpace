@@ -57,18 +57,22 @@ Trello page: https://trello.com/b/pADk2non/tasks-board
 # Project Checklist
 - user stories, backlog creation - 2 pct ✅ 
 - design/architecture/UML - 2 pct ✅ 
-- source control (branch creation, merge/rebase, minim 10 commits) - 2 pct
+- source control (branch creation, merge/rebase, minim 10 commits) - 2 pct ✅ 
 - automatic testing (unit or integration) - 2 pct
-- bug reporting - 1 pct 
-- design patterns - 1 pct
-- refactoring, code standards - 1 pct
-- comentarii cod - 1 pct
-- folosirea unui tool de AI - 1 pct
+- bug reporting - 1 pct  ✅ 
+- design patterns - 1 pct ✅ 
+- refactoring, code standards - 1 pct ✅ 
+- code comments - 1 pct ✅ 
+- using an AI tool- 1 pct ✅ 
 
 ## Demo
 
 General Demo - https://www.youtube.com/watch?v=u8xe2mcGbcA
 
 Chat Demo
+- Cristina's View: https://youtu.be/vITdjwi1uv4
+- Vlad's View: https://youtu.be/G5cF5dQdzXo
 
 Video Demo
+- Cristina's View: https://youtu.be/bX0weQ_bEd8
+- Vlad's View: https://youtu.be/UbeQ9QPdi_Y
