@@ -67,4 +67,8 @@ Trello page: https://trello.com/b/pADk2non/tasks-board
 
 ## Demo
 
-Coming soon...
+General Demo - https://www.youtube.com/watch?v=u8xe2mcGbcA
+
+Chat Demo
+
+Video Demo
